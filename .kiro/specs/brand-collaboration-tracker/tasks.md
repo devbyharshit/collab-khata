@@ -13,20 +13,20 @@ This implementation plan breaks down the Collab Khata MVP development into discr
   - Add comprehensive README with setup instructions
   - _Requirements: 10.1, 10.3, 10.5_
 
-- [ ] 2. Initialize backend FastAPI application
-  - [ ] 2.1 Create FastAPI project structure and dependencies
+- [x] 2. Initialize backend FastAPI application
+  - [x] 2.1 Create FastAPI project structure and dependencies
     - Set up FastAPI application with proper directory structure
     - Configure requirements.txt with FastAPI, SQLAlchemy 2.0, Alembic, JWT dependencies
     - Create main.py with basic FastAPI app and health check endpoint
     - _Requirements: 9.1, 9.4_
   
-  - [ ] 2.2 Configure database connection and Alembic
+  - [x] 2.2 Configure database connection and Alembic
     - Set up SQLAlchemy async engine and session configuration
     - Initialize Alembic for database migrations
     - Create database configuration with environment variables
     - _Requirements: 9.1, 9.3_
   
-  - [ ] 2.3 Write property test for database connectivity
+  - [x] 2.3 Write property test for database connectivity
     - **Property 21: CRUD operation persistence**
     - **Validates: Requirements 9.1**
 

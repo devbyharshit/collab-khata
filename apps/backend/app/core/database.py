@@ -27,6 +27,9 @@ AsyncSessionLocal = async_sessionmaker(
 # Base class for models
 Base = declarative_base()
 
+# Import models to ensure they are registered with Base
+from app.models.test_model import TestEntityModel
+
 
 # Dependency to get database session
 async def get_db():
