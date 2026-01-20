@@ -124,21 +124,21 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 16: Multiple payment expectations per collaboration**
     - **Validates: Requirements 4.2, 4.3, 4.4, 4.5, 4.6**
 
-- [ ] 9. Implement conversation and file management APIs
-  - [ ] 9.1 Create conversation log endpoints
+- [x] 9. Implement conversation and file management APIs
+  - [x] 9.1 Create conversation log endpoints
     - Implement GET /api/collaborations/{id}/conversations for listing conversation logs
     - Implement POST /api/collaborations/{id}/conversations for adding conversation logs
     - Add chronological ordering and channel validation
     - _Requirements: 5.1, 5.2, 5.4_
   
-  - [ ] 9.2 Create file attachment endpoints
+  - [x] 9.2 Create file attachment endpoints
     - Implement POST /api/collaborations/{id}/files for file uploads
     - Implement GET /api/files/{id} for file downloads
     - Add file type and size validation
     - Set up local filesystem storage with proper file organization
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
   
-  - [ ] 9.3 Write property tests for conversation and file management
+  - [x] 9.3 Write property tests for conversation and file management
     - **Property 26: Conversation log chronological ordering**
     - **Property 27: Communication channel support**
     - **Property 23: File upload and storage**
