@@ -86,21 +86,21 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 10: Input validation prevents invalid data**
     - **Validates: Requirements 2.1, 2.3, 2.4**
 
-- [ ] 7. Implement collaboration management API
-  - [ ] 7.1 Create collaboration CRUD endpoints
+- [x] 7. Implement collaboration management API
+  - [x] 7.1 Create collaboration CRUD endpoints
     - Implement GET /api/collaborations with filtering capabilities
     - Implement POST /api/collaborations for creating new collaborations
     - Implement GET /api/collaborations/{id} for collaboration details
     - Implement PUT /api/collaborations/{id} for updating collaborations
     - _Requirements: 3.1, 3.6_
   
-  - [ ] 7.2 Implement collaboration status management
+  - [x] 7.2 Implement collaboration status management
     - Create PATCH /api/collaborations/{id}/status endpoint
     - Implement status transition validation logic
     - Add posting date requirement for Posted status
     - _Requirements: 3.2, 3.3_
   
-  - [ ] 7.3 Write property tests for collaboration workflow
+  - [x] 7.3 Write property tests for collaboration workflow
     - **Property 11: Status transition workflow validation**
     - **Property 12: Posted status requires posting date**
     - **Validates: Requirements 3.2, 3.3**
