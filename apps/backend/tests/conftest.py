@@ -35,5 +35,9 @@ async def test_session(test_engine):
     )
     
     async with async_session() as session:
-        yield session
-        await session.rollback()
+        try:
+            yield session
+        finally:
+            # Always rollback to clean up
+            await session.rollback()
+            await session.close()

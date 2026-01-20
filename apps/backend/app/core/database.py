@@ -29,6 +29,12 @@ Base = declarative_base()
 
 # Import models to ensure they are registered with Base
 from app.models.test_model import TestEntityModel
+from app.models.user import User
+from app.models.brand import Brand
+from app.models.collaboration import Collaboration
+from app.models.payment import PaymentExpectation, PaymentCredit
+from app.models.conversation import ConversationLog
+from app.models.file_attachment import FileAttachment
 
 
 # Dependency to get database session

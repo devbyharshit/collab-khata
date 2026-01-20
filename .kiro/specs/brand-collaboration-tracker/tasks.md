@@ -30,19 +30,19 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 21: CRUD operation persistence**
     - **Validates: Requirements 9.1**
 
-- [ ] 3. Implement database models and relationships
-  - [ ] 3.1 Create SQLAlchemy models for all entities
+- [x] 3. Implement database models and relationships
+  - [x] 3.1 Create SQLAlchemy models for all entities
     - Implement User, Brand, Collaboration, PaymentExpectation, PaymentCredit models
     - Implement ConversationLog and FileAttachment models
     - Define proper relationships and foreign key constraints
     - _Requirements: 2.1, 3.1, 4.1, 5.1, 6.1_
   
-  - [ ] 3.2 Create initial Alembic migration
+  - [x] 3.2 Create initial Alembic migration
     - Generate migration for all database tables and relationships
     - Test migration up and down operations
     - _Requirements: 9.3_
   
-  - [ ] 3.3 Write property tests for model relationships
+  - [x] 3.3 Write property tests for model relationships
     - **Property 8: Data isolation by user**
     - **Validates: Requirements 2.2, 2.5, 5.5, 6.6, 7.6**
 
