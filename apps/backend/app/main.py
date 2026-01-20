@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import os
 from .core.config import settings
+from .api.auth import router as auth_router
 
 # Create FastAPI app
 app = FastAPI(
@@ -23,6 +24,9 @@ app.add_middleware(
 
 # Create upload directory if it doesn't exist
 os.makedirs(settings.upload_dir, exist_ok=True)
+
+# Include routers
+app.include_router(auth_router)
 
 
 @app.get("/")

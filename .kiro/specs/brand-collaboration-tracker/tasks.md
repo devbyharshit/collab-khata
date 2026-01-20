@@ -46,24 +46,24 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 8: Data isolation by user**
     - **Validates: Requirements 2.2, 2.5, 5.5, 6.6, 7.6**
 
-- [ ] 4. Implement authentication system
-  - [ ] 4.1 Create JWT authentication utilities
+- [-] 4. Implement authentication system
+  - [x] 4.1 Create JWT authentication utilities
     - Implement JWT token generation and validation functions
     - Create password hashing utilities using bcrypt
     - Set up authentication dependencies for FastAPI
     - _Requirements: 1.1, 1.3, 1.5_
   
-  - [ ] 4.2 Implement user registration and login endpoints
+  - [x] 4.2 Implement user registration and login endpoints
     - Create POST /api/auth/register endpoint with validation
     - Create POST /api/auth/login endpoint with JWT token response
     - Create GET /api/auth/me endpoint for user profile
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
   
-  - [ ] 4.3 Write property tests for authentication
+  - [x] 4.3 Write property tests for authentication
     - **Property 1: User registration with valid data creates account**
     - **Validates: Requirements 1.1**
   
-  - [ ] 4.4 Write property tests for authentication security
+  - [x] 4.4 Write property tests for authentication security
     - **Property 2: Duplicate email registration prevention**
     - **Property 3: Valid credentials authentication**
     - **Property 4: Invalid credentials rejection**
