@@ -2,3 +2,5 @@ node_modules
 
 apps/backend/venv
 apps/backend/.hypothesis/
+
+.hypothesis

@@ -46,7 +46,7 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 8: Data isolation by user**
     - **Validates: Requirements 2.2, 2.5, 5.5, 6.6, 7.6**
 
-- [-] 4. Implement authentication system
+- [x] 4. Implement authentication system
   - [x] 4.1 Create JWT authentication utilities
     - Implement JWT token generation and validation functions
     - Create password hashing utilities using bcrypt
@@ -69,18 +69,18 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 4: Invalid credentials rejection**
     - **Validates: Requirements 1.2, 1.3, 1.4**
 
-- [ ] 5. Checkpoint - Ensure authentication system works
+- [x] 5. Checkpoint - Ensure authentication system works
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Implement brand management API
-  - [ ] 6.1 Create brand CRUD endpoints
+- [x] 6. Implement brand management API
+  - [x] 6.1 Create brand CRUD endpoints
     - Implement GET /api/brands for listing user's brands
     - Implement POST /api/brands for creating new brands
     - Implement GET /api/brands/{id} for brand details
     - Implement PUT /api/brands/{id} for updating brands
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
   
-  - [ ] 6.2 Write property tests for brand management
+  - [x] 6.2 Write property tests for brand management
     - **Property 7: Entity creation and persistence**
     - **Property 9: Entity updates preserve data integrity**
     - **Property 10: Input validation prevents invalid data**
