@@ -105,20 +105,20 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 12: Posted status requires posting date**
     - **Validates: Requirements 3.2, 3.3**
 
-- [ ] 8. Implement payment management API
-  - [ ] 8.1 Create payment expectation endpoints
+- [x] 8. Implement payment management API
+  - [x] 8.1 Create payment expectation endpoints
     - Implement GET /api/collaborations/{id}/payments for listing payment expectations
     - Implement POST /api/collaborations/{id}/payments for creating payment expectations
     - Implement payment expectation validation and business logic
     - _Requirements: 4.1, 4.6_
   
-  - [ ] 8.2 Create payment credit endpoints
+  - [x] 8.2 Create payment credit endpoints
     - Implement POST /api/payments/{id}/credits for recording payment credits
     - Implement payment status calculation logic (Pending, Partial, Completed, Overdue)
     - Create GET /api/payments/overdue endpoint for overdue payment detection
     - _Requirements: 4.2, 4.3, 4.4, 4.5_
   
-  - [ ] 8.3 Write property tests for payment management
+  - [x] 8.3 Write property tests for payment management
     - **Property 14: Payment expectation and credit relationship**
     - **Property 15: Payment status calculation**
     - **Property 16: Multiple payment expectations per collaboration**

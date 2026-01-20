@@ -6,6 +6,7 @@ from .core.config import settings
 from .api.auth import router as auth_router
 from .api.brands import router as brands_router
 from .api.collaborations import router as collaborations_router
+from .api.payments import router as payments_router
 
 # Create FastAPI app
 app = FastAPI(
@@ -31,6 +32,7 @@ os.makedirs(settings.upload_dir, exist_ok=True)
 app.include_router(auth_router)
 app.include_router(brands_router)
 app.include_router(collaborations_router)
+app.include_router(payments_router)
 
 
 @app.get("/")
