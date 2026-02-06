@@ -9,6 +9,7 @@ interface AuthContextType {
   loading: boolean
   login: (credentials: LoginRequest) => Promise<void>
   register: (data: RegisterRequest) => Promise<void>
+  registerUser: (data: RegisterRequest) => Promise<void>
   logout: () => void
   isAuthenticated: boolean
 }
@@ -56,6 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(userResponse.data)
   }
 
+  const registerUser = async (data: RegisterRequest) => {
+    await apiClient.post<AuthResponse>('/api/auth/register', data)
+    // Don't set token or fetch user - just create the account
+  }
+
   const logout = () => {
     clearToken()
     setUser(null)
@@ -66,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     login,
     register,
+    registerUser,
     logout,
     isAuthenticated: !!user,
   }

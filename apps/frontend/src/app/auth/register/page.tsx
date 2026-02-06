@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { toast } from 'sonner'
 import { useAuth } from '@/contexts/auth-context'
 import { AuthGuard } from '@/components/auth-guard'
 import { Button } from '@/components/ui/button'
@@ -41,7 +42,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { register } = useAuth()
+  const { registerUser } = useAuth()
   const [error, setError] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -58,14 +59,17 @@ export default function RegisterPage() {
     try {
       setIsLoading(true)
       setError('')
-      await register({
+      await registerUser({
         email: data.email,
         password: data.password,
       })
-      router.push('/dashboard')
+      toast.success('Account created successfully! Please sign in.')
+      router.push('/auth/login')
     } catch (err) {
       const apiError = err as ApiError
-      setError(apiError.error?.message || 'Registration failed. Please try again.')
+      const errorMessage = apiError.error?.message || 'Registration failed. Please try again.'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsLoading(false)
     }

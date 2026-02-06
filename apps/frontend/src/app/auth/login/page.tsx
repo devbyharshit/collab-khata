@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { toast } from 'sonner'
 import { useAuth } from '@/contexts/auth-context'
 import { AuthGuard } from '@/components/auth-guard'
 import { Button } from '@/components/ui/button'
@@ -54,10 +55,13 @@ export default function LoginPage() {
       setIsLoading(true)
       setError('')
       await login(data)
+      toast.success('Welcome back!')
       router.push('/dashboard')
     } catch (err) {
       const apiError = err as ApiError
-      setError(apiError.error?.message || 'Login failed. Please try again.')
+      const errorMessage = apiError.error?.message || 'Login failed. Please try again.'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsLoading(false)
     }
