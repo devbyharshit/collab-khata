@@ -8,6 +8,7 @@ from .api.brands import router as brands_router
 from .api.collaborations import router as collaborations_router
 from .api.payments import router as payments_router
 from .api.conversations import router as conversations_router
+from .api.dashboard import router as dashboard_router
 
 # Create FastAPI app
 app = FastAPI(
@@ -35,6 +36,7 @@ app.include_router(brands_router)
 app.include_router(collaborations_router)
 app.include_router(payments_router)
 app.include_router(conversations_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")

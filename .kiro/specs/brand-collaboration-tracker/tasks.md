@@ -146,33 +146,33 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - **Property 25: File type and size validation**
     - **Validates: Requirements 5.1, 5.2, 5.4, 6.1, 6.2, 6.3, 6.4, 6.5**
 
-- [ ] 10. Implement dashboard API
-  - [ ] 10.1 Create dashboard calculation endpoints
+- [x] 10. Implement dashboard API
+  - [x] 10.1 Create dashboard calculation endpoints
     - Implement GET /api/dashboard for financial summaries and statistics
     - Add total expected earnings calculation across all collaborations
     - Add pending payment expectations and credited amounts calculation
     - Add collaboration counts by status aggregation
     - _Requirements: 7.1, 7.2, 7.4_
   
-  - [ ] 10.2 Write property tests for dashboard calculations
+  - [x] 10.2 Write property tests for dashboard calculations
     - **Property 17: Financial summary calculations**
     - **Property 18: Overdue payment identification**
     - **Property 19: Collaboration status aggregation**
     - **Property 20: Real-time dashboard updates**
     - **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
 
-- [ ] 11. Checkpoint - Ensure backend API is complete
+- [x] 11. Checkpoint - Ensure backend API is complete
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 12. Initialize Next.js frontend application
-  - [ ] 12.1 Create Next.js project with TypeScript and TailwindCSS
+- [x] 12. Initialize Next.js frontend application
+  - [x] 12.1 Create Next.js project with TypeScript and TailwindCSS
     - Set up Next.js 14 with App Router in apps/frontend directory
     - Configure TypeScript with strict mode and proper types
     - Set up TailwindCSS with mobile-first responsive design
     - Install and configure shadcn/ui component library
     - _Requirements: 8.1, 8.4_
   
-  - [ ] 12.2 Set up API client and authentication utilities
+  - [x] 12.2 Set up API client and authentication utilities
     - Create API client with axios for backend communication
     - Implement JWT token storage and management
     - Create authentication context and hooks
