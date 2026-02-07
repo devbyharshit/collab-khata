@@ -35,7 +35,8 @@ describe('RegisterPage', () => {
       loading: false,
       user: null,
       login: jest.fn(),
-      register: mockRegister,
+      register: jest.fn(),
+      registerUser: mockRegister,
       logout: jest.fn(),
     })
   })
@@ -139,7 +140,7 @@ describe('RegisterPage', () => {
     })
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/dashboard')
+      expect(mockPush).toHaveBeenCalledWith('/auth/login')
     })
   })
 

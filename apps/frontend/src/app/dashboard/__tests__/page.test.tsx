@@ -22,7 +22,7 @@ jest.mock('@/lib/api-client')
 jest.mock('lucide-react', () => ({
   AlertCircle: () => <div data-testid="alert-icon">AlertCircle</div>,
   TrendingUp: () => <div data-testid="trending-up-icon">TrendingUp</div>,
-  DollarSign: () => <div data-testid="dollar-icon">DollarSign</div>,
+  IndianRupee: () => <div data-testid="rupee-icon">IndianRupee</div>,
   Clock: () => <div data-testid="clock-icon">Clock</div>,
   Briefcase: () => <div data-testid="briefcase-icon">Briefcase</div>,
 }))

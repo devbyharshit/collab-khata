@@ -213,36 +213,36 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - Test data loading and error states
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 15. Implement brand management pages
-  - [ ] 15.1 Create brands list and creation pages
+- [x] 15. Implement brand management pages
+  - [x] 15.1 Create brands list and creation pages
     - Implement /brands page with brand listing and search
     - Create brand creation form with validation
     - Add mobile-optimized forms with minimal typing
     - Implement brand editing and deletion functionality
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 8.2, 8.3_
   
-  - [ ] 15.2 Write unit tests for brand management components
+  - [x] 15.2 Write unit tests for brand management components
     - Test brand CRUD operations
     - Test form validation and error handling
     - Test mobile responsiveness
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 16. Implement collaboration management pages
-  - [ ] 16.1 Create collaborations list page with filtering
+- [x] 16. Implement collaboration management pages
+  - [x] 16.1 Create collaborations list page with filtering
     - Implement /collaborations page with collaboration listing
     - Add status-based filtering and search functionality
     - Create mobile-optimized list view with key information
     - Add collaboration creation form
     - _Requirements: 3.1, 3.6, 8.1, 8.4_
   
-  - [ ] 16.2 Create collaboration detail page
+  - [x] 16.2 Create collaboration detail page
     - Implement /collaborations/[id] page with full collaboration details
     - Add status update functionality with workflow validation
     - Display associated payment expectations and credits
     - Show conversation logs and file attachments
     - _Requirements: 3.2, 3.3, 4.6, 5.2, 6.2_
   
-  - [ ] 16.3 Write unit tests for collaboration components
+  - [x] 16.3 Write unit tests for collaboration components
     - Test collaboration CRUD operations
     - Test status transition validation
     - Test detail page data display

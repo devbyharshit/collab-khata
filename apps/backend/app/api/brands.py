@@ -124,3 +124,27 @@ async def update_brand(
     await db.commit()
     await db.refresh(brand)
     return brand
+
+
+@router.delete("/{brand_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_brand(
+    brand_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete a specific brand for the authenticated user."""
+    # Get existing brand
+    result = await db.execute(
+        select(Brand).where(Brand.id == brand_id, Brand.user_id == current_user.id)
+    )
+    brand = result.scalar_one_or_none()
+    
+    if not brand:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Brand not found"
+        )
+    
+    await db.delete(brand)
+    await db.commit()
+    return None
