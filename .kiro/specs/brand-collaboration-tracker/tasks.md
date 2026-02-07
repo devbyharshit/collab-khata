@@ -199,15 +199,15 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - Test routing and redirection logic
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 14. Implement dashboard page
-  - [ ] 14.1 Create dashboard layout and financial summary components
+- [x] 14. Implement dashboard page
+  - [x] 14.1 Create dashboard layout and financial summary components
     - Implement /dashboard page with mobile-first responsive design
     - Create financial summary cards (total expected, credited, pending)
     - Add collaboration status distribution charts/indicators
     - Implement overdue payments alert section
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 8.1, 8.4_
   
-  - [ ] 14.2 Write unit tests for dashboard components
+  - [x] 14.2 Write unit tests for dashboard components
     - Test financial calculation display
     - Test responsive layout behavior
     - Test data loading and error states

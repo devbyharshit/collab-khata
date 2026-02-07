@@ -99,7 +99,7 @@ async def _calculate_financial_summary(user_id: int, db: AsyncSession) -> Financ
         total_credited=total_credited,
         pending_amount=pending_amount,
         overdue_count=overdue_count,
-        currency="USD"
+        currency="INR"
     )
 
 

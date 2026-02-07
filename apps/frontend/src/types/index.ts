@@ -29,3 +29,23 @@ export interface ApiError {
     details?: Record<string, any>
   }
 }
+
+// Dashboard types
+export interface FinancialSummary {
+  total_expected: number
+  total_credited: number
+  pending_amount: number
+  overdue_count: number
+  currency: string
+}
+
+export interface CollaborationStatusCount {
+  status: string
+  count: number
+}
+
+export interface DashboardResponse {
+  financial_summary: FinancialSummary
+  collaboration_status_counts: CollaborationStatusCount[]
+  total_collaborations: number
+}

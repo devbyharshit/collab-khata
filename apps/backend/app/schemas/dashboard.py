@@ -18,7 +18,7 @@ class FinancialSummary(BaseModel):
     total_credited: Decimal = Field(..., description="Total amount credited/received")
     pending_amount: Decimal = Field(..., description="Total pending amount (expected - credited)")
     overdue_count: int = Field(..., description="Number of overdue payment expectations")
-    currency: str = Field(default="USD", description="Currency for financial amounts")
+    currency: str = Field(default="INR", description="Currency for financial amounts")
 
 
 class DashboardResponse(BaseModel):
