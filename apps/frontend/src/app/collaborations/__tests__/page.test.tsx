@@ -104,10 +104,21 @@ describe('CollaborationsPage', () => {
     it('should display collaborations list after successful fetch', async () => {
       mockApiClient.get.mockImplementation((url) => {
         if (url === '/api/collaborations') {
-          return Promise.resolve({ data: mockCollaborations })
+          return Promise.resolve({ 
+            data: { 
+              collaborations: mockCollaborations,
+              total_count: mockCollaborations.length,
+              filtered_count: mockCollaborations.length
+            } 
+          })
         }
         if (url === '/api/brands') {
-          return Promise.resolve({ data: mockBrands })
+          return Promise.resolve({ 
+            data: { 
+              brands: mockBrands,
+              total_count: mockBrands.length
+            } 
+          })
         }
         return Promise.reject(new Error('Unknown URL'))
       })
@@ -126,10 +137,21 @@ describe('CollaborationsPage', () => {
     it('should display empty state when no collaborations exist', async () => {
       mockApiClient.get.mockImplementation((url) => {
         if (url === '/api/collaborations') {
-          return Promise.resolve({ data: [] })
+          return Promise.resolve({ 
+            data: { 
+              collaborations: [],
+              total_count: 0,
+              filtered_count: 0
+            } 
+          })
         }
         if (url === '/api/brands') {
-          return Promise.resolve({ data: mockBrands })
+          return Promise.resolve({ 
+            data: { 
+              brands: mockBrands,
+              total_count: mockBrands.length
+            } 
+          })
         }
         return Promise.reject(new Error('Unknown URL'))
       })
@@ -162,10 +184,21 @@ describe('CollaborationsPage', () => {
     beforeEach(() => {
       mockApiClient.get.mockImplementation((url) => {
         if (url === '/api/collaborations') {
-          return Promise.resolve({ data: mockCollaborations })
+          return Promise.resolve({ 
+            data: { 
+              collaborations: mockCollaborations,
+              total_count: mockCollaborations.length,
+              filtered_count: mockCollaborations.length
+            } 
+          })
         }
         if (url === '/api/brands') {
-          return Promise.resolve({ data: mockBrands })
+          return Promise.resolve({ 
+            data: { 
+              brands: mockBrands,
+              total_count: mockBrands.length
+            } 
+          })
         }
         return Promise.reject(new Error('Unknown URL'))
       })
@@ -252,10 +285,21 @@ describe('CollaborationsPage', () => {
     beforeEach(() => {
       mockApiClient.get.mockImplementation((url) => {
         if (url === '/api/collaborations') {
-          return Promise.resolve({ data: [] })
+          return Promise.resolve({ 
+            data: { 
+              collaborations: [],
+              total_count: 0,
+              filtered_count: 0
+            } 
+          })
         }
         if (url === '/api/brands') {
-          return Promise.resolve({ data: mockBrands })
+          return Promise.resolve({ 
+            data: { 
+              brands: mockBrands,
+              total_count: mockBrands.length
+            } 
+          })
         }
         return Promise.reject(new Error('Unknown URL'))
       })
@@ -320,28 +364,24 @@ describe('CollaborationsPage', () => {
     beforeEach(() => {
       mockApiClient.get.mockImplementation((url) => {
         if (url === '/api/collaborations') {
-          return Promise.resolve({ data: mockCollaborations })
+          return Promise.resolve({ 
+            data: { 
+              collaborations: mockCollaborations,
+              total_count: mockCollaborations.length,
+              filtered_count: mockCollaborations.length
+            } 
+          })
         }
         if (url === '/api/brands') {
-          return Promise.resolve({ data: mockBrands })
+          return Promise.resolve({ 
+            data: { 
+              brands: mockBrands,
+              total_count: mockBrands.length
+            } 
+          })
         }
         return Promise.reject(new Error('Unknown URL'))
       })
-    })
-
-    it('should navigate to dashboard when Dashboard button is clicked', async () => {
-      const user = userEvent.setup()
-
-      render(<CollaborationsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('Summer Campaign 2024')).toBeInTheDocument()
-      })
-
-      const dashboardButton = screen.getByRole('button', { name: /dashboard/i })
-      await user.click(dashboardButton)
-
-      expect(mockPush).toHaveBeenCalledWith('/dashboard')
     })
 
     it('should navigate to collaboration detail when card is clicked', async () => {
@@ -380,10 +420,21 @@ describe('CollaborationsPage', () => {
     beforeEach(() => {
       mockApiClient.get.mockImplementation((url) => {
         if (url === '/api/collaborations') {
-          return Promise.resolve({ data: [] })
+          return Promise.resolve({ 
+            data: { 
+              collaborations: [],
+              total_count: 0,
+              filtered_count: 0
+            } 
+          })
         }
         if (url === '/api/brands') {
-          return Promise.resolve({ data: mockBrands })
+          return Promise.resolve({ 
+            data: { 
+              brands: mockBrands,
+              total_count: mockBrands.length
+            } 
+          })
         }
         return Promise.reject(new Error('Unknown URL'))
       })

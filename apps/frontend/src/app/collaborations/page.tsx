@@ -1,19 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { AuthGuard } from '@/components/auth-guard'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   Dialog,
   DialogContent,
@@ -22,25 +12,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import apiClient from '@/lib/api-client'
 import {
+  Brand,
   Collaboration,
   CollaborationCreateRequest,
   CollaborationStatus,
-  Brand,
 } from '@/types'
 import {
   AlertCircle,
-  Plus,
-  Search,
-  Filter,
-  Calendar,
-  DollarSign,
-  Eye,
   Briefcase,
+  Calendar,
+  CircleDollarSign,
+  Eye,
+  Filter,
+  IndianRupee,
+  Plus,
+  Search
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 const STATUS_COLORS: Record<CollaborationStatus, string> = {
   [CollaborationStatus.Lead]: 'bg-gray-100 text-gray-800',
@@ -87,6 +88,12 @@ export default function CollaborationsPage() {
 
   useEffect(() => {
     // Filter collaborations based on search query and status
+    // Ensure collaborations is always an array
+    if (!Array.isArray(collaborations)) {
+      setFilteredCollaborations([])
+      return
+    }
+    
     let filtered = collaborations
 
     // Apply status filter
@@ -113,14 +120,25 @@ export default function CollaborationsPage() {
       setLoading(true)
       setError(null)
       const [collabsResponse, brandsResponse] = await Promise.all([
-        apiClient.get<Collaboration[]>('/api/collaborations'),
+        apiClient.get<{ collaborations: Collaboration[], total_count: number, filtered_count: number }>('/api/collaborations'),
         apiClient.get<Brand[]>('/api/brands'),
       ])
-      setCollaborations(collabsResponse.data)
-      setFilteredCollaborations(collabsResponse.data)
-      setBrands(brandsResponse.data)
+      
+      // Extract collaborations array from the response
+      const collabsData = Array.isArray(collabsResponse.data?.collaborations) 
+        ? collabsResponse.data.collaborations 
+        : []
+      const brandsData = Array.isArray(brandsResponse.data) ? brandsResponse.data : []
+      
+      setCollaborations(collabsData)
+      setFilteredCollaborations(collabsData)
+      setBrands(brandsData)
     } catch (err: any) {
       setError(err?.error?.message || 'Failed to load data')
+      // Set empty arrays on error
+      setCollaborations([])
+      setFilteredCollaborations([])
+      setBrands([])
     } finally {
       setLoading(false)
     }
@@ -226,19 +244,10 @@ export default function CollaborationsPage() {
                 Track and manage your brand partnerships
               </p>
             </div>
-            <div className="flex gap-2 w-full sm:w-auto">
-              <Button
-                onClick={() => router.push('/dashboard')}
-                variant="outline"
-                className="flex-1 sm:flex-none"
-              >
-                Dashboard
-              </Button>
-              <Button onClick={openCreateDialog} className="flex-1 sm:flex-none">
-                <Plus className="h-4 w-4 mr-2" />
-                New Collab
-              </Button>
-            </div>
+            <Button onClick={openCreateDialog} className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              New Collab
+            </Button>
           </div>
 
           {/* Search and Filter Bar */}
@@ -351,7 +360,7 @@ export default function CollaborationsPage() {
                           </div>
                           {collab.agreed_amount !== undefined && (
                             <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <DollarSign className="h-4 w-4 flex-shrink-0" />
+                              <CircleDollarSign className="h-4 w-4 flex-shrink-0" />
                               <span>{formatCurrency(collab.agreed_amount, collab.currency)}</span>
                             </div>
                           )}
@@ -460,6 +469,8 @@ export default function CollaborationsPage() {
                 <Input
                   id="create-amount"
                   type="number"
+                  min="0"
+                  step="0.01"
                   value={formData.agreed_amount || ''}
                   onChange={(e) =>
                     handleInputChange(

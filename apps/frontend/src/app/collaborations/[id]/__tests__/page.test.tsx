@@ -122,7 +122,12 @@ describe('CollaborationDetailPage', () => {
           return Promise.resolve({ data: mockCollaboration })
         }
         if (url === '/api/collaborations/1/payments') {
-          return Promise.resolve({ data: mockPayments })
+          return Promise.resolve({ 
+            data: { 
+              payment_expectations: mockPayments, 
+              total_count: mockPayments.length 
+            } 
+          })
         }
         if (url === '/api/collaborations/1/conversations') {
           return Promise.resolve({ data: mockConversations })
@@ -165,7 +170,12 @@ describe('CollaborationDetailPage', () => {
           return Promise.resolve({ data: mockCollaboration })
         }
         if (url === '/api/collaborations/1/payments') {
-          return Promise.resolve({ data: mockPayments })
+          return Promise.resolve({ 
+            data: { 
+              payment_expectations: mockPayments, 
+              total_count: mockPayments.length 
+            } 
+          })
         }
         if (url === '/api/collaborations/1/conversations') {
           return Promise.resolve({ data: mockConversations })
@@ -234,7 +244,12 @@ describe('CollaborationDetailPage', () => {
           return Promise.resolve({ data: mockCollaboration })
         }
         if (url === '/api/collaborations/1/payments') {
-          return Promise.resolve({ data: mockPayments })
+          return Promise.resolve({ 
+            data: { 
+              payment_expectations: mockPayments, 
+              total_count: mockPayments.length 
+            } 
+          })
         }
         if (url === '/api/collaborations/1/conversations') {
           return Promise.resolve({ data: mockConversations })
@@ -360,7 +375,12 @@ describe('CollaborationDetailPage', () => {
           return Promise.resolve({ data: mockCollaboration })
         }
         if (url === '/api/collaborations/1/payments') {
-          return Promise.resolve({ data: mockPayments })
+          return Promise.resolve({ 
+            data: { 
+              payment_expectations: mockPayments, 
+              total_count: mockPayments.length 
+            } 
+          })
         }
         if (url === '/api/collaborations/1/conversations') {
           return Promise.resolve({ data: mockConversations })
@@ -427,7 +447,12 @@ describe('CollaborationDetailPage', () => {
           return Promise.resolve({ data: mockCollaboration })
         }
         if (url === '/api/collaborations/1/payments') {
-          return Promise.resolve({ data: mockPayments })
+          return Promise.resolve({ 
+            data: { 
+              payment_expectations: mockPayments, 
+              total_count: mockPayments.length 
+            } 
+          })
         }
         if (url === '/api/collaborations/1/conversations') {
           return Promise.resolve({ data: mockConversations })
@@ -474,7 +499,12 @@ describe('CollaborationDetailPage', () => {
           return Promise.resolve({ data: mockCollaboration })
         }
         if (url === '/api/collaborations/1/payments') {
-          return Promise.resolve({ data: mockPayments })
+          return Promise.resolve({ 
+            data: { 
+              payment_expectations: mockPayments, 
+              total_count: mockPayments.length 
+            } 
+          })
         }
         if (url === '/api/collaborations/1/conversations') {
           return Promise.resolve({ data: mockConversations })

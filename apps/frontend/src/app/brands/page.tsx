@@ -51,6 +51,12 @@ export default function BrandsPage() {
 
   useEffect(() => {
     // Filter brands based on search query
+    // Ensure brands is always an array
+    if (!Array.isArray(brands)) {
+      setFilteredBrands([])
+      return
+    }
+    
     if (searchQuery.trim() === '') {
       setFilteredBrands(brands)
     } else {
@@ -69,11 +75,18 @@ export default function BrandsPage() {
     try {
       setLoading(true)
       setError(null)
-      const response = await apiClient.get<Brand[]>('/api/brands')
-      setBrands(response.data)
-      setFilteredBrands(response.data)
+      const response = await apiClient.get<{ brands: Brand[], total_count: number }>('/api/brands')
+      
+      // Extract brands array from the response
+      const brandsData = Array.isArray(response.data.brands) ? response.data.brands : []
+      
+      setBrands(brandsData)
+      setFilteredBrands(brandsData)
     } catch (err: any) {
       setError(err?.error?.message || 'Failed to load brands')
+      // Set empty arrays on error
+      setBrands([])
+      setFilteredBrands([])
     } finally {
       setLoading(false)
     }
@@ -205,13 +218,6 @@ export default function BrandsPage() {
               </p>
             </div>
             <div className="flex gap-2 w-full sm:w-auto">
-              <Button
-                onClick={() => router.push('/dashboard')}
-                variant="outline"
-                className="flex-1 sm:flex-none"
-              >
-                Dashboard
-              </Button>
               <Button
                 onClick={openCreateDialog}
                 className="flex-1 sm:flex-none"

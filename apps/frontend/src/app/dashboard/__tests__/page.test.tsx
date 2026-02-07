@@ -334,20 +334,6 @@ describe('DashboardPage', () => {
         expect(screen.getByText(`Welcome back, ${mockUser.email}`)).toBeInTheDocument()
       })
     })
-
-    it('should handle logout correctly', async () => {
-      render(<DashboardPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('₹5,000.00')).toBeInTheDocument()
-      })
-
-      const logoutButton = screen.getByRole('button', { name: /logout/i })
-      fireEvent.click(logoutButton)
-
-      expect(mockLogout).toHaveBeenCalledTimes(1)
-      expect(mockPush).toHaveBeenCalledWith('/auth/login')
-    })
   })
 
   describe('Responsive Layout', () => {
@@ -391,35 +377,6 @@ describe('DashboardPage', () => {
         expect(mockApiClient.get).toHaveBeenCalledWith('/api/dashboard')
         expect(mockApiClient.get).toHaveBeenCalledTimes(1)
       })
-    })
-
-    it('should handle real-time data updates correctly', async () => {
-      const initialData = mockDashboardData
-      const updatedData = {
-        ...mockDashboardData,
-        financial_summary: {
-          ...mockDashboardData.financial_summary,
-          total_credited: 4000,
-          pending_amount: 1000,
-        },
-      }
-
-      mockApiClient.get
-        .mockResolvedValueOnce({ data: initialData })
-        .mockResolvedValueOnce({ data: updatedData })
-
-      const { rerender } = render(<DashboardPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('₹3,000.00')).toBeInTheDocument()
-      })
-
-      // Simulate data refresh
-      fireEvent.click(screen.getByRole('button', { name: /logout/i }))
-      rerender(<DashboardPage />)
-
-      // Note: In a real scenario, you'd trigger a refresh mechanism
-      // This test demonstrates the component can handle data changes
     })
   })
 })

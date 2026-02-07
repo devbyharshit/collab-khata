@@ -11,7 +11,7 @@ import { DashboardResponse } from '@/types'
 import { AlertCircle, TrendingUp, IndianRupee, Clock, Briefcase } from 'lucide-react'
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const router = useRouter()
   const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -32,11 +32,6 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleLogout = () => {
-    logout()
-    router.push('/auth/login')
   }
 
   const formatCurrency = (amount: number, currency: string = 'INR') => {
@@ -82,16 +77,11 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-gray-50 p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Welcome back, {user?.email}
-              </p>
-            </div>
-            <Button onClick={handleLogout} variant="outline" className="w-full sm:w-auto">
-              Logout
-            </Button>
+          <div className="mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Welcome back, {user?.email}
+            </p>
           </div>
 
           {/* Loading State */}

@@ -74,7 +74,12 @@ describe('BrandsPage', () => {
     })
 
     it('should display brands list after successful fetch', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
 
       render(<BrandsPage />)
 
@@ -88,7 +93,12 @@ describe('BrandsPage', () => {
     })
 
     it('should display empty state when no brands exist', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
 
       render(<BrandsPage />)
 
@@ -114,7 +124,12 @@ describe('BrandsPage', () => {
 
   describe('Brand Search', () => {
     it('should filter brands by name', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -131,7 +146,12 @@ describe('BrandsPage', () => {
     })
 
     it('should filter brands by contact name', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -148,7 +168,12 @@ describe('BrandsPage', () => {
     })
 
     it('should show no results message when search has no matches', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -167,7 +192,12 @@ describe('BrandsPage', () => {
 
   describe('Brand Creation', () => {
     it('should open create dialog when Add Brand button is clicked', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -184,7 +214,12 @@ describe('BrandsPage', () => {
     })
 
     it('should validate required brand name field', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -204,7 +239,12 @@ describe('BrandsPage', () => {
     })
 
     it('should validate email format', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -230,7 +270,12 @@ describe('BrandsPage', () => {
     })
 
     it('should create brand with valid data', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
       mockApiClient.post.mockResolvedValue({
         data: {
           id: 3,
@@ -277,7 +322,12 @@ describe('BrandsPage', () => {
 
   describe('Brand Editing', () => {
     it('should open edit dialog with pre-filled data', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -300,7 +350,12 @@ describe('BrandsPage', () => {
     })
 
     it('should update brand with valid data', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       mockApiClient.put.mockResolvedValue({
         data: { ...mockBrands[0], name: 'Updated Nike' },
       })
@@ -337,7 +392,12 @@ describe('BrandsPage', () => {
 
   describe('Brand Deletion', () => {
     it('should open delete confirmation dialog', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -358,7 +418,12 @@ describe('BrandsPage', () => {
     })
 
     it('should delete brand when confirmed', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: mockBrands,
+          total_count: mockBrands.length
+        } 
+      })
       mockApiClient.delete.mockResolvedValue({ data: null })
       const user = userEvent.setup()
 
@@ -387,7 +452,12 @@ describe('BrandsPage', () => {
 
   describe('Mobile Responsiveness', () => {
     it('should render mobile-optimized forms with large touch targets', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -408,7 +478,12 @@ describe('BrandsPage', () => {
     })
 
     it('should have full-width buttons on mobile', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.get.mockResolvedValue({ 
+        data: { 
+          brands: [],
+          total_count: 0
+        } 
+      })
       const user = userEvent.setup()
 
       render(<BrandsPage />)
@@ -422,24 +497,6 @@ describe('BrandsPage', () => {
 
       const createButton = screen.getByRole('button', { name: /create brand/i })
       expect(createButton.className).toContain('w-full')
-    })
-  })
-
-  describe('Navigation', () => {
-    it('should navigate to dashboard when Dashboard button is clicked', async () => {
-      mockApiClient.get.mockResolvedValue({ data: [] })
-      const user = userEvent.setup()
-
-      render(<BrandsPage />)
-
-      await waitFor(() => {
-        expect(screen.getByText('No brands yet')).toBeInTheDocument()
-      })
-
-      const dashboardButton = screen.getByRole('button', { name: /dashboard/i })
-      await user.click(dashboardButton)
-
-      expect(mockPush).toHaveBeenCalledWith('/dashboard')
     })
   })
 })

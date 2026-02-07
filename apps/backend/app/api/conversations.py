@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, desc
 from typing import List
 import os
 import uuid
@@ -37,16 +37,19 @@ MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
 @router.get("/collaborations/{collaboration_id}/conversations", response_model=List[ConversationLogResponse])
 async def get_conversation_logs(
     collaboration_id: int,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Get all conversation logs for a collaboration in chronological order."""
     
     # Verify collaboration exists and belongs to user
-    collaboration = db.query(Collaboration).filter(
-        Collaboration.id == collaboration_id,
-        Collaboration.user_id == current_user.id
-    ).first()
+    result = await db.execute(
+        select(Collaboration).where(
+            Collaboration.id == collaboration_id,
+            Collaboration.user_id == current_user.id
+        )
+    )
+    collaboration = result.scalar_one_or_none()
     
     if not collaboration:
         raise HTTPException(
@@ -55,9 +58,12 @@ async def get_conversation_logs(
         )
     
     # Get conversation logs ordered chronologically (oldest first)
-    conversation_logs = db.query(ConversationLog).filter(
-        ConversationLog.collaboration_id == collaboration_id
-    ).order_by(ConversationLog.created_at.asc()).all()
+    result = await db.execute(
+        select(ConversationLog)
+        .where(ConversationLog.collaboration_id == collaboration_id)
+        .order_by(ConversationLog.created_at.asc())
+    )
+    conversation_logs = result.scalars().all()
     
     return conversation_logs
 
@@ -66,16 +72,19 @@ async def get_conversation_logs(
 async def create_conversation_log(
     collaboration_id: int,
     conversation_data: ConversationLogCreate,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Add a new conversation log to a collaboration."""
     
     # Verify collaboration exists and belongs to user
-    collaboration = db.query(Collaboration).filter(
-        Collaboration.id == collaboration_id,
-        Collaboration.user_id == current_user.id
-    ).first()
+    result = await db.execute(
+        select(Collaboration).where(
+            Collaboration.id == collaboration_id,
+            Collaboration.user_id == current_user.id
+        )
+    )
+    collaboration = result.scalar_one_or_none()
     
     if not collaboration:
         raise HTTPException(
@@ -91,8 +100,8 @@ async def create_conversation_log(
     )
     
     db.add(conversation_log)
-    db.commit()
-    db.refresh(conversation_log)
+    await db.commit()
+    await db.refresh(conversation_log)
     
     return conversation_log
 
@@ -100,16 +109,19 @@ async def create_conversation_log(
 @router.get("/collaborations/{collaboration_id}/files", response_model=List[FileAttachmentResponse])
 async def get_file_attachments(
     collaboration_id: int,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Get all file attachments for a collaboration."""
     
     # Verify collaboration exists and belongs to user
-    collaboration = db.query(Collaboration).filter(
-        Collaboration.id == collaboration_id,
-        Collaboration.user_id == current_user.id
-    ).first()
+    result = await db.execute(
+        select(Collaboration).where(
+            Collaboration.id == collaboration_id,
+            Collaboration.user_id == current_user.id
+        )
+    )
+    collaboration = result.scalar_one_or_none()
     
     if not collaboration:
         raise HTTPException(
@@ -118,9 +130,12 @@ async def get_file_attachments(
         )
     
     # Get file attachments ordered by creation date (newest first)
-    file_attachments = db.query(FileAttachment).filter(
-        FileAttachment.collaboration_id == collaboration_id
-    ).order_by(desc(FileAttachment.created_at)).all()
+    result = await db.execute(
+        select(FileAttachment)
+        .where(FileAttachment.collaboration_id == collaboration_id)
+        .order_by(desc(FileAttachment.created_at))
+    )
+    file_attachments = result.scalars().all()
     
     return file_attachments
 
@@ -129,16 +144,19 @@ async def get_file_attachments(
 async def upload_file(
     collaboration_id: int,
     file: UploadFile = File(...),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Upload a file attachment to a collaboration."""
     
     # Verify collaboration exists and belongs to user
-    collaboration = db.query(Collaboration).filter(
-        Collaboration.id == collaboration_id,
-        Collaboration.user_id == current_user.id
-    ).first()
+    result = await db.execute(
+        select(Collaboration).where(
+            Collaboration.id == collaboration_id,
+            Collaboration.user_id == current_user.id
+        )
+    )
+    collaboration = result.scalar_one_or_none()
     
     if not collaboration:
         raise HTTPException(
@@ -196,8 +214,8 @@ async def upload_file(
     )
     
     db.add(file_attachment)
-    db.commit()
-    db.refresh(file_attachment)
+    await db.commit()
+    await db.refresh(file_attachment)
     
     return FileUploadResponse(
         id=file_attachment.id,
@@ -211,15 +229,16 @@ async def upload_file(
 @router.get("/files/{file_id}")
 async def download_file(
     file_id: int,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Download a file attachment."""
     
     # Get file attachment
-    file_attachment = db.query(FileAttachment).filter(
-        FileAttachment.id == file_id
-    ).first()
+    result = await db.execute(
+        select(FileAttachment).where(FileAttachment.id == file_id)
+    )
+    file_attachment = result.scalar_one_or_none()
     
     if not file_attachment:
         raise HTTPException(
@@ -228,10 +247,13 @@ async def download_file(
         )
     
     # Verify user owns the collaboration
-    collaboration = db.query(Collaboration).filter(
-        Collaboration.id == file_attachment.collaboration_id,
-        Collaboration.user_id == current_user.id
-    ).first()
+    result = await db.execute(
+        select(Collaboration).where(
+            Collaboration.id == file_attachment.collaboration_id,
+            Collaboration.user_id == current_user.id
+        )
+    )
+    collaboration = result.scalar_one_or_none()
     
     if not collaboration:
         raise HTTPException(

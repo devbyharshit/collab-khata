@@ -129,7 +129,7 @@ class TestDashboardCalculationProperties:
             assert financial_summary.total_expected == total_expected
             assert financial_summary.total_credited == total_credited
             assert financial_summary.pending_amount == (total_expected - total_credited)
-            assert financial_summary.currency == "USD"
+            assert financial_summary.currency == "INR"  # Default currency is INR as per requirements
     
     @given(
         promised_days_offsets=st.lists(

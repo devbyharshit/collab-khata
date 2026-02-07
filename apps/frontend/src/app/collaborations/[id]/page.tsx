@@ -42,7 +42,7 @@ import {
   AlertCircle,
   ArrowLeft,
   Calendar,
-  DollarSign,
+  BadgeIndianRupee,
   Briefcase,
   Edit,
   MessageSquare,
@@ -133,16 +133,22 @@ export default function CollaborationDetailPage() {
       const [collabResponse, paymentsResponse, conversationsResponse, filesResponse] =
         await Promise.all([
           apiClient.get<Collaboration>(`/api/collaborations/${collaborationId}`),
-          apiClient.get<PaymentExpectation[]>(`/api/collaborations/${collaborationId}/payments`),
+          apiClient.get<{ payment_expectations: PaymentExpectation[]; total_count: number }>(
+            `/api/collaborations/${collaborationId}/payments`
+          ),
           apiClient.get<ConversationLog[]>(
             `/api/collaborations/${collaborationId}/conversations`
           ),
           apiClient.get<FileAttachment[]>(`/api/collaborations/${collaborationId}/files`),
         ])
       setCollaboration(collabResponse.data)
-      setPayments(paymentsResponse.data)
-      setConversations(conversationsResponse.data)
-      setFiles(filesResponse.data)
+      setPayments(
+        Array.isArray(paymentsResponse.data)
+          ? paymentsResponse.data
+          : paymentsResponse.data.payment_expectations || []
+      )
+      setConversations(Array.isArray(conversationsResponse.data) ? conversationsResponse.data : [])
+      setFiles(Array.isArray(filesResponse.data) ? filesResponse.data : [])
     } catch (err: any) {
       setError(err?.error?.message || 'Failed to load collaboration details')
     } finally {
@@ -497,7 +503,7 @@ export default function CollaborationDetailPage() {
                     <div>
                       <Label className="text-sm text-gray-600">Agreed Amount</Label>
                       <div className="flex items-center gap-2 mt-1">
-                        <DollarSign className="h-4 w-4 text-gray-400" />
+                        <BadgeIndianRupee className="h-4 w-4 text-gray-400" />
                         <p className="font-medium">
                           {formatCurrency(collaboration.agreed_amount, collaboration.currency)}
                         </p>
@@ -543,7 +549,7 @@ export default function CollaborationDetailPage() {
                 <CardContent>
                   {payments.length === 0 ? (
                     <div className="text-center py-8">
-                      <DollarSign className="h-10 w-10 text-gray-400 mx-auto mb-3" />
+                      <BadgeIndianRupee className="h-10 w-10 text-gray-400 mx-auto mb-3" />
                       <p className="text-sm text-gray-600">No payment expectations yet</p>
                       <Button variant="outline" size="sm" onClick={openPaymentDialog} className="mt-4">
                         Add First Payment
@@ -826,6 +832,8 @@ export default function CollaborationDetailPage() {
               <Input
                 id="payment-amount"
                 type="number"
+                min="0"
+                step="0.01"
                 value={paymentFormData.expected_amount || ''}
                 onChange={(e) =>
                   setPaymentFormData((prev) => ({
@@ -933,6 +941,8 @@ export default function CollaborationDetailPage() {
               <Input
                 id="credit-amount"
                 type="number"
+                min="0"
+                step="0.01"
                 value={creditFormData.credited_amount || ''}
                 onChange={(e) =>
                   setCreditFormData((prev) => ({

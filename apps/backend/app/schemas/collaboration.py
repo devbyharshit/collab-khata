@@ -7,6 +7,7 @@ from typing import Optional, List
 from decimal import Decimal
 
 from app.models.collaboration import CollaborationStatus
+from app.schemas.brand import BrandResponse
 
 
 class CollaborationCreate(BaseModel):
@@ -42,6 +43,7 @@ class CollaborationResponse(BaseModel):
     id: int
     user_id: int
     brand_id: int
+    brand: Optional[BrandResponse] = None
     title: str
     platform: str
     deliverables_text: Optional[str] = None

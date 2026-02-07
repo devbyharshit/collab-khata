@@ -35,8 +35,12 @@ async def list_collaborations(
 ):
     """List collaborations for the authenticated user with filtering capabilities."""
     
-    # Build base query
-    query = select(Collaboration).where(Collaboration.user_id == current_user.id)
+    from sqlalchemy.orm import selectinload
+    
+    # Build base query with brand relationship loaded
+    query = select(Collaboration).options(
+        selectinload(Collaboration.brand)
+    ).where(Collaboration.user_id == current_user.id)
     count_query = select(func.count(Collaboration.id)).where(Collaboration.user_id == current_user.id)
     
     # Apply filters
@@ -120,8 +124,12 @@ async def get_collaboration(
     db: AsyncSession = Depends(get_db)
 ):
     """Get a specific collaboration by ID for the authenticated user."""
+    from sqlalchemy.orm import selectinload
+    
     result = await db.execute(
-        select(Collaboration).where(
+        select(Collaboration).options(
+            selectinload(Collaboration.brand)
+        ).where(
             Collaboration.id == collaboration_id, 
             Collaboration.user_id == current_user.id
         )

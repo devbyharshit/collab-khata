@@ -248,39 +248,39 @@ This implementation plan breaks down the Collab Khata MVP development into discr
     - Test detail page data display
     - _Requirements: 3.1, 3.2, 3.3, 3.6_
 
-- [ ] 17. Implement payment management modals
-  - [ ] 17.1 Create payment expectation modal
+- [x] 17. Implement payment management modals
+  - [x] 17.1 Create payment expectation modal
     - Implement modal for adding payment expectations to collaborations
     - Add form validation for amount, date, and payment method
     - Create mobile-friendly modal with large touch targets
     - _Requirements: 4.1, 8.2_
   
-  - [ ] 17.2 Create payment credit modal
+  - [x] 17.2 Create payment credit modal
     - Implement modal for recording payment credits
     - Add partial payment support with balance calculation display
     - Show payment status updates in real-time
     - _Requirements: 4.2, 4.4, 4.5_
   
-  - [ ] 17.3 Write unit tests for payment modals
+  - [x] 17.3 Write unit tests for payment modals
     - Test payment expectation creation
     - Test payment credit recording
     - Test balance calculations
     - _Requirements: 4.1, 4.2, 4.4, 4.5_
 
-- [ ] 18. Implement conversation and file management
-  - [ ] 18.1 Create conversation log modal
+- [x] 18. Implement conversation and file management
+  - [x] 18.1 Create conversation log modal
     - Implement modal for adding conversation logs
     - Add channel selection dropdown with predefined options
     - Display conversation logs in chronological order
     - _Requirements: 5.1, 5.2, 5.4, 8.3_
   
-  - [ ] 18.2 Create file upload and management interface
+  - [x] 18.2 Create file upload and management interface
     - Implement file upload modal with drag-and-drop support
     - Add file type and size validation with user feedback
     - Create file list display with download functionality
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
   
-  - [ ] 18.3 Write unit tests for conversation and file components
+  - [x] 18.3 Write unit tests for conversation and file components
     - Test conversation log creation and display
     - Test file upload validation and error handling
     - Test file download functionality

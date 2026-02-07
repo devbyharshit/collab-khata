@@ -119,6 +119,9 @@ async def create_payment_expectation(
     # Update status based on promised date
     await _update_payment_status(new_expectation, db)
     
+    # Eagerly load payment_credits to avoid lazy loading issues in response serialization
+    await db.refresh(new_expectation, ["payment_credits"])
+    
     return new_expectation
 
 
@@ -238,8 +241,14 @@ async def list_overdue_payments(
 async def _update_payment_status(expectation: PaymentExpectation, db: AsyncSession) -> None:
     """Update payment expectation status based on credits and dates."""
     
+    # Query payment credits to calculate total credited amount
+    credits_result = await db.execute(
+        select(PaymentCredit).where(PaymentCredit.payment_expectation_id == expectation.id)
+    )
+    credits = credits_result.scalars().all()
+    
     # Calculate total credited amount
-    total_credited = sum(credit.credited_amount for credit in expectation.payment_credits)
+    total_credited = sum(credit.credited_amount for credit in credits)
     
     # Determine new status
     new_status = expectation.status
