@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render } from '@/test-utils/render-with-act'
 import userEvent from '@testing-library/user-event'
 import { PaymentExpectationModal } from '../payment-expectation-modal'
 import { PaymentExpectationCreateRequest } from '@/types'

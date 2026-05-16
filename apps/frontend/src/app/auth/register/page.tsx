@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/contexts/auth-context'
 import { AuthGuard } from '@/components/auth-guard'
 import { Button } from '@/components/ui/button'
+import { LoadingButton } from '@/components/ui/loading-button'
 import { Input } from '@/components/ui/input'
 import {
   Form,
@@ -152,13 +153,14 @@ export default function RegisterPage() {
                     {error}
                   </div>
                 )}
-                <Button
+                <LoadingButton
                   type="submit"
                   className="w-full h-12 text-base"
-                  disabled={isLoading}
+                  isLoading={isLoading}
+                  loadingText="Creating account..."
                 >
-                  {isLoading ? 'Creating account...' : 'Create account'}
-                </Button>
+                  Create account
+                </LoadingButton>
               </form>
             </Form>
           </CardContent>

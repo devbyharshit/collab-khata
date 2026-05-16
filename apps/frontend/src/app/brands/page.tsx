@@ -18,10 +18,8 @@ import {
 import apiClient from '@/lib/api-client'
 import { Brand, BrandCreateRequest, BrandUpdateRequest } from '@/types'
 import { AlertCircle, Plus, Search, Edit, Trash2, Building2, Mail, MessageSquare } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 export default function BrandsPage() {
-  const router = useRouter()
   const [brands, setBrands] = useState<Brand[]>([])
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>([])
   const [loading, setLoading] = useState(true)
@@ -75,10 +73,10 @@ export default function BrandsPage() {
     try {
       setLoading(true)
       setError(null)
-      const response = await apiClient.get<{ brands: Brand[], total_count: number }>('/api/brands')
+      const response = await apiClient.get<Brand[]>('/api/brands')
       
-      // Extract brands array from the response
-      const brandsData = Array.isArray(response.data.brands) ? response.data.brands : []
+      // Backend returns array directly
+      const brandsData = Array.isArray(response.data) ? response.data : []
       
       setBrands(brandsData)
       setFilteredBrands(brandsData)
@@ -548,7 +546,7 @@ export default function BrandsPage() {
           <DialogHeader>
             <DialogTitle>Delete Brand</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{selectedBrand?.name}"? This action cannot be undone.
+              Are you sure you want to delete &quot;{selectedBrand?.name}&quot;? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">

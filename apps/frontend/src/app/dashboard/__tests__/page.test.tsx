@@ -72,16 +72,16 @@ describe('DashboardPage', () => {
   })
 
   describe('Loading State', () => {
-    it('should display loading spinner while fetching data', () => {
+    it('should display loading skeleton while fetching data', () => {
       mockApiClient.get.mockImplementation(
         () => new Promise(() => {}) // Never resolves
       )
 
       render(<DashboardPage />)
 
-      // Check for the loading spinner by its class
-      const spinner = document.querySelector('.animate-spin')
-      expect(spinner).toBeInTheDocument()
+      // Check for the loading skeleton cards
+      const skeletons = document.querySelectorAll('.animate-pulse')
+      expect(skeletons.length).toBeGreaterThan(0)
     })
   })
 

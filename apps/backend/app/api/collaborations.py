@@ -85,6 +85,7 @@ async def create_collaboration(
     db: AsyncSession = Depends(get_db)
 ):
     """Create a new collaboration for the authenticated user."""
+    from sqlalchemy.orm import selectinload
     
     # Validate that the brand belongs to the current user
     brand_result = await db.execute(
@@ -114,6 +115,15 @@ async def create_collaboration(
     db.add(new_collaboration)
     await db.commit()
     await db.refresh(new_collaboration)
+    
+    # Reload with brand relationship
+    result = await db.execute(
+        select(Collaboration).options(
+            selectinload(Collaboration.brand)
+        ).where(Collaboration.id == new_collaboration.id)
+    )
+    new_collaboration = result.scalar_one()
+    
     return new_collaboration
 
 
@@ -153,6 +163,7 @@ async def update_collaboration(
     db: AsyncSession = Depends(get_db)
 ):
     """Update a specific collaboration for the authenticated user."""
+    from sqlalchemy.orm import selectinload
     
     # Get existing collaboration
     result = await db.execute(
@@ -200,6 +211,15 @@ async def update_collaboration(
     
     await db.commit()
     await db.refresh(collaboration)
+    
+    # Reload with brand relationship
+    result = await db.execute(
+        select(Collaboration).options(
+            selectinload(Collaboration.brand)
+        ).where(Collaboration.id == collaboration.id)
+    )
+    collaboration = result.scalar_one()
+    
     return collaboration
 
 
@@ -211,6 +231,7 @@ async def update_collaboration_status(
     db: AsyncSession = Depends(get_db)
 ):
     """Update collaboration status with workflow validation."""
+    from sqlalchemy.orm import selectinload
     
     # Get existing collaboration
     result = await db.execute(
@@ -240,14 +261,29 @@ async def update_collaboration_status(
         CollaborationStatus.CLOSED: []  # Terminal state
     }
     
-    # Validate status transition
-    current_status = collaboration.status
-    new_status = status_data.status
+    # Ensure both are CollaborationStatus enum objects
+    if isinstance(collaboration.status, str):
+        try:
+            current_status = CollaborationStatus(collaboration.status)
+        except ValueError:
+            current_status = collaboration.status
+    else:
+        current_status = collaboration.status
+        
+    if isinstance(status_data.status, str):
+        try:
+            new_status = CollaborationStatus(status_data.status)
+        except ValueError:
+            new_status = status_data.status
+    else:
+        new_status = status_data.status
     
     if new_status not in valid_transitions.get(current_status, []):
+        current_val = current_status.value if hasattr(current_status, 'value') else current_status
+        new_val = new_status.value if hasattr(new_status, 'value') else new_status
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid status transition from {current_status.value} to {new_status.value}"
+            detail=f"Invalid status transition from {current_val} to {new_val}"
         )
     
     # Special validation for Posted status - requires posting_date
@@ -264,4 +300,13 @@ async def update_collaboration_status(
     
     await db.commit()
     await db.refresh(collaboration)
+    
+    # Reload with brand relationship
+    result = await db.execute(
+        select(Collaboration).options(
+            selectinload(Collaboration.brand)
+        ).where(Collaboration.id == collaboration.id)
+    )
+    collaboration = result.scalar_one()
+    
     return collaboration

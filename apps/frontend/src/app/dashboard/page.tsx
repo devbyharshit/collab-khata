@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react'
 import apiClient from '@/lib/api-client'
 import { DashboardResponse } from '@/types'
 import { AlertCircle, TrendingUp, IndianRupee, Clock, Briefcase } from 'lucide-react'
+import { DashboardCardSkeleton } from '@/components/ui/skeleton'
+import { toast } from '@/lib/toast'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -28,7 +30,9 @@ export default function DashboardPage() {
       const response = await apiClient.get<DashboardResponse>('/api/dashboard')
       setDashboardData(response.data)
     } catch (err: any) {
-      setError(err?.error?.message || 'Failed to load dashboard data')
+      const errorMessage = err?.error?.message || 'Failed to load dashboard data'
+      setError(errorMessage)
+      toast.error(err)
     } finally {
       setLoading(false)
     }
@@ -86,8 +90,11 @@ export default function DashboardPage() {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <DashboardCardSkeleton />
+              <DashboardCardSkeleton />
+              <DashboardCardSkeleton />
+              <DashboardCardSkeleton />
             </div>
           )}
 

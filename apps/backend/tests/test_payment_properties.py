@@ -352,9 +352,10 @@ class TestPaymentManagementProperties:
             
             # Add credits to some expectations and verify independence
             for i, expectation in enumerate(stored_expectations[:min(2, len(stored_expectations))]):
+                credit_amount = (amounts[i] * Decimal('0.5')).quantize(Decimal('0.01'))
                 credit = PaymentCredit(
                     payment_expectation_id=expectation.id,
-                    credited_amount=amounts[i] * Decimal('0.5'),  # 50% credit
+                    credited_amount=credit_amount,  # 50% credit, quantized
                     credited_date=date.today()
                 )
                 db.add(credit)
@@ -373,7 +374,8 @@ class TestPaymentManagementProperties:
                 if i < min(2, len(stored_expectations)):
                     # Should have one credit
                     assert len(credits) == 1
-                    assert credits[0].credited_amount == amounts[i] * Decimal('0.5')
+                    expected_credit = (amounts[i] * Decimal('0.5')).quantize(Decimal('0.01'))
+                    assert credits[0].credited_amount == expected_credit
                 else:
                     # Should have no credits
                     assert len(credits) == 0

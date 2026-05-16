@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/contexts/auth-context'
 import { AuthGuard } from '@/components/auth-guard'
 import { Button } from '@/components/ui/button'
+import { LoadingButton } from '@/components/ui/loading-button'
 import { Input } from '@/components/ui/input'
 import {
   Form,
@@ -125,13 +126,14 @@ export default function LoginPage() {
                     {error}
                   </div>
                 )}
-                <Button
+                <LoadingButton
                   type="submit"
                   className="w-full h-12 text-base"
-                  disabled={isLoading}
+                  isLoading={isLoading}
+                  loadingText="Signing in..."
                 >
-                  {isLoading ? 'Signing in...' : 'Sign in'}
-                </Button>
+                  Sign in
+                </LoadingButton>
               </form>
             </Form>
           </CardContent>

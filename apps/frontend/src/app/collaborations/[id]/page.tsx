@@ -124,6 +124,7 @@ export default function CollaborationDetailPage() {
     if (collaborationId) {
       fetchCollaborationDetails()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collaborationId])
 
   const fetchCollaborationDetails = async () => {

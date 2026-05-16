@@ -52,11 +52,33 @@ apiClient.interceptors.response.use(
     return Promise.reject({
       error: {
         code: 'NETWORK_ERROR',
-        message: 'Unable to connect to the server',
+        message: 'Unable to connect to the server. Please check your internet connection.',
       },
     } as ApiError)
   }
 )
+
+// Helper function to get user-friendly error messages
+export function getErrorMessage(error: unknown): string {
+  if (isApiError(error)) {
+    return error.error.message
+  }
+  if (error instanceof Error) {
+    return error.message
+  }
+  return 'An unexpected error occurred'
+}
+
+// Helper function to check if error is an API error
+export function isApiError(error: unknown): error is ApiError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'error' in error &&
+    typeof (error as any).error === 'object' &&
+    'message' in (error as any).error
+  )
+}
 
 // Token management functions
 const TOKEN_KEY = 'collab_khata_token'

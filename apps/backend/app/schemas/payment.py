@@ -1,7 +1,7 @@
 """
 Pydantic schemas for payment management.
 """
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, model_validator
 from typing import Optional, List
 from datetime import date, datetime
 from decimal import Decimal
@@ -20,6 +20,16 @@ class PaymentExpectationBase(BaseModel):
 class PaymentExpectationCreate(PaymentExpectationBase):
     """Schema for creating payment expectations."""
     
+    @model_validator(mode='before')
+    @classmethod
+    def handle_empty_strings(cls, data):
+        if isinstance(data, dict):
+            if 'promised_date' in data and data['promised_date'] == '':
+                data['promised_date'] = None
+            if 'expected_amount' in data and data['expected_amount'] == '':
+                data['expected_amount'] = None
+        return data
+
     @validator('expected_amount')
     def validate_amount(cls, v):
         if v <= 0:
@@ -42,6 +52,16 @@ class PaymentExpectationUpdate(BaseModel):
     payment_method: Optional[str] = Field(None, max_length=100, description="Payment method")
     notes: Optional[str] = Field(None, description="Additional notes")
     
+    @model_validator(mode='before')
+    @classmethod
+    def handle_empty_strings(cls, data):
+        if isinstance(data, dict):
+            if 'promised_date' in data and data['promised_date'] == '':
+                data['promised_date'] = None
+            if 'expected_amount' in data and data['expected_amount'] == '':
+                data['expected_amount'] = None
+        return data
+
     @validator('expected_amount')
     def validate_amount(cls, v):
         if v is not None and v <= 0:

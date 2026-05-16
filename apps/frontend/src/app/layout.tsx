@@ -4,6 +4,7 @@ import "./globals.css"
 import { AuthProvider } from "@/contexts/auth-context"
 import { Toaster } from "sonner"
 import { Navigation } from "@/components/navigation"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -20,13 +21,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <Navigation />
-          <div className="pb-16 md:pb-0">
-            {children}
-          </div>
-          <Toaster position="top-center" richColors />
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <Navigation />
+            {/* Add padding bottom for mobile bottom navigation (72px = 56px nav + 16px safe area) */}
+            <div className="pb-20 md:pb-0">
+              {children}
+            </div>
+            <Toaster position="top-center" richColors />
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

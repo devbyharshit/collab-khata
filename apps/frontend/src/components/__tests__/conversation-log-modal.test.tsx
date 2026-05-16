@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render } from '@/test-utils/render-with-act'
 import userEvent from '@testing-library/user-event'
 import { ConversationLogModal } from '../conversation-log-modal'
 import { CommunicationChannel } from '@/types'
@@ -64,7 +65,10 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Message text is required')).toBeInTheDocument()
@@ -76,10 +80,15 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, '   ')
+      await act(async () => {
+        await userEvent.type(messageInput, '   ')
+      })
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Message text is required')).toBeInTheDocument()
@@ -91,10 +100,15 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, 'Discussed campaign details')
+      await act(async () => {
+        await userEvent.type(messageInput, 'Discussed campaign details')
+      })
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.queryByText('Message text is required')).not.toBeInTheDocument()
@@ -105,13 +119,19 @@ describe('ConversationLogModal', () => {
   describe('Form Submission', () => {
     it('should call onSubmit with default Email channel', async () => {
       mockOnSubmit.mockResolvedValue(undefined)
+      
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, 'Initial outreach email sent')
+      await act(async () => {
+        await userEvent.type(messageInput, 'Initial outreach email sent')
+      })
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(mockOnSubmit).toHaveBeenCalledWith({
@@ -123,13 +143,19 @@ describe('ConversationLogModal', () => {
 
     it('should close modal after successful submission', async () => {
       mockOnSubmit.mockResolvedValue(undefined)
+      
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, 'Test message')
+      await act(async () => {
+        await userEvent.type(messageInput, 'Test message')
+      })
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(mockOnOpenChange).toHaveBeenCalledWith(false)
@@ -146,16 +172,23 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, 'Test message')
+      await act(async () => {
+        await userEvent.type(messageInput, 'Test message')
+      })
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Adding...')).toBeInTheDocument()
       })
 
-      resolveSubmit!()
+      await act(async () => {
+        resolveSubmit!()
+      })
     })
 
     it('should disable form fields during submission', async () => {
@@ -168,17 +201,24 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, 'Test message')
+      await act(async () => {
+        await userEvent.type(messageInput, 'Test message')
+      })
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.getByRole('combobox')).toBeDisabled()
         expect(messageInput).toBeDisabled()
       })
 
-      resolveSubmit!()
+      await act(async () => {
+        resolveSubmit!()
+      })
     })
   })
 
@@ -187,10 +227,15 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const messageInput = screen.getByLabelText(/Message/i)
-      await userEvent.type(messageInput, 'Test message')
+      await act(async () => {
+        await userEvent.type(messageInput, 'Test message')
+      })
 
       const cancelButton = screen.getByRole('button', { name: /Cancel/i })
-      fireEvent.click(cancelButton)
+      
+      await act(async () => {
+        fireEvent.click(cancelButton)
+      })
 
       expect(mockOnOpenChange).toHaveBeenCalledWith(false)
     })
@@ -199,15 +244,23 @@ describe('ConversationLogModal', () => {
       const { rerender } = render(<ConversationLogModal {...defaultProps} />)
 
       const submitButton = screen.getByRole('button', { name: /Add Conversation/i })
-      fireEvent.click(submitButton)
+      
+      await act(async () => {
+        fireEvent.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Message text is required')).toBeInTheDocument()
       })
 
       // Close and reopen modal
-      rerender(<ConversationLogModal {...defaultProps} open={false} />)
-      rerender(<ConversationLogModal {...defaultProps} open={true} />)
+      await act(async () => {
+        rerender(<ConversationLogModal {...defaultProps} open={false} />)
+      })
+      
+      await act(async () => {
+        rerender(<ConversationLogModal {...defaultProps} open={true} />)
+      })
 
       expect(screen.queryByText('Message text is required')).not.toBeInTheDocument()
     })
@@ -237,7 +290,10 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /Cancel/i })
-      fireEvent.click(cancelButton)
+      
+      act(() => {
+        fireEvent.click(cancelButton)
+      })
 
       expect(mockOnOpenChange).toHaveBeenCalledWith(false)
     })
@@ -246,7 +302,10 @@ describe('ConversationLogModal', () => {
       render(<ConversationLogModal {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /Cancel/i })
-      fireEvent.click(cancelButton)
+      
+      act(() => {
+        fireEvent.click(cancelButton)
+      })
 
       expect(mockOnSubmit).not.toHaveBeenCalled()
     })

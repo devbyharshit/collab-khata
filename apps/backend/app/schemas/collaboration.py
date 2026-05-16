@@ -1,7 +1,7 @@
 """
 Collaboration schemas for request/response validation.
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from datetime import datetime, date
 from typing import Optional, List
 from decimal import Decimal
@@ -20,6 +20,16 @@ class CollaborationCreate(BaseModel):
     currency: str = Field("USD", min_length=3, max_length=3, description="Currency code")
     deadline_date: Optional[date] = Field(None, description="Deadline for the collaboration")
 
+    @model_validator(mode='before')
+    @classmethod
+    def handle_empty_strings(cls, data):
+        if isinstance(data, dict):
+            if 'deadline_date' in data and data['deadline_date'] == '':
+                data['deadline_date'] = None
+            if 'agreed_amount' in data and data['agreed_amount'] == '':
+                data['agreed_amount'] = None
+        return data
+
 
 class CollaborationUpdate(BaseModel):
     """Schema for collaboration update request."""
@@ -31,11 +41,31 @@ class CollaborationUpdate(BaseModel):
     currency: Optional[str] = Field(None, min_length=3, max_length=3, description="Currency code")
     deadline_date: Optional[date] = Field(None, description="Deadline for the collaboration")
 
+    @model_validator(mode='before')
+    @classmethod
+    def handle_empty_strings(cls, data):
+        if isinstance(data, dict):
+            if 'deadline_date' in data and data['deadline_date'] == '':
+                data['deadline_date'] = None
+            if 'agreed_amount' in data and data['agreed_amount'] == '':
+                data['agreed_amount'] = None
+        return data
+
 
 class CollaborationStatusUpdate(BaseModel):
     """Schema for collaboration status update request."""
     status: CollaborationStatus = Field(..., description="New status for the collaboration")
     posting_date: Optional[date] = Field(None, description="Posting date (required when status is Posted)")
+    
+    @model_validator(mode='before')
+    @classmethod
+    def handle_empty_strings(cls, data):
+        """Custom validation to handle empty strings for optional date fields."""
+        if isinstance(data, dict):
+            # Convert empty string to None for posting_date
+            if 'posting_date' in data and data['posting_date'] == '':
+                data['posting_date'] = None
+        return data
 
 
 class CollaborationResponse(BaseModel):
