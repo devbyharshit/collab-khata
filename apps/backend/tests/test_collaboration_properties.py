@@ -66,7 +66,7 @@ class TestCollaborationWorkflowProperties:
         new_status=status_strategy
     )
     @hypothesis_settings(
-        max_examples=100,
+        
         suppress_health_check=[HealthCheck.function_scoped_fixture],
         deadline=None
     )
@@ -175,7 +175,7 @@ class TestCollaborationWorkflowProperties:
         posting_date=st.one_of(st.none(), date_strategy)
     )
     @hypothesis_settings(
-        max_examples=100,
+        
         suppress_health_check=[HealthCheck.function_scoped_fixture],
         deadline=None
     )

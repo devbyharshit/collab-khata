@@ -24,6 +24,9 @@ class CollaborationCreate(BaseModel):
     @classmethod
     def handle_empty_strings(cls, data):
         if isinstance(data, dict):
+            for field in ['title', 'platform', 'deliverables_text']:
+                if field in data and isinstance(data[field], str):
+                    data[field] = data[field].strip()
             if 'deadline_date' in data and data['deadline_date'] == '':
                 data['deadline_date'] = None
             if 'agreed_amount' in data and data['agreed_amount'] == '':
@@ -45,6 +48,9 @@ class CollaborationUpdate(BaseModel):
     @classmethod
     def handle_empty_strings(cls, data):
         if isinstance(data, dict):
+            for field in ['title', 'platform', 'deliverables_text']:
+                if field in data and isinstance(data[field], str):
+                    data[field] = data[field].strip()
             if 'deadline_date' in data and data['deadline_date'] == '':
                 data['deadline_date'] = None
             if 'agreed_amount' in data and data['agreed_amount'] == '':

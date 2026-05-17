@@ -134,7 +134,7 @@ async def create_payment_credit(
 ):
     """Record a payment credit for a payment expectation."""
     
-    # Get payment expectation and verify ownership through collaboration
+    # Get payment expectation and verify ownership through collaboration with lock to prevent race conditions
     expectation_result = await db.execute(
         select(PaymentExpectation)
         .join(Collaboration)
@@ -142,6 +142,7 @@ async def create_payment_credit(
             PaymentExpectation.id == payment_id,
             Collaboration.user_id == current_user.id
         )
+        .with_for_update()
         .options(selectinload(PaymentExpectation.payment_credits))
     )
     expectation = expectation_result.scalar_one_or_none()

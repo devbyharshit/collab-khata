@@ -1,20 +1,20 @@
 """
 Authentication schemas for request/response validation.
 """
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
 
 class UserRegister(BaseModel):
     """Schema for user registration request."""
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=8, max_length=72)
 
 
 class UserLogin(BaseModel):
     """Schema for user login request."""
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=1, max_length=72)
 
 
 class Token(BaseModel):

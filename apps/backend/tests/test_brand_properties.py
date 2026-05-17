@@ -67,7 +67,6 @@ class TestBrandManagementProperties:
         notes=notes_strategy
     )
     @hypothesis_settings(
-        max_examples=100,
         suppress_health_check=[HealthCheck.function_scoped_fixture],
         deadline=None
     )
@@ -159,7 +158,6 @@ class TestBrandManagementProperties:
         updated_notes=notes_strategy
     )
     @hypothesis_settings(
-        max_examples=100,
         suppress_health_check=[HealthCheck.function_scoped_fixture],
         deadline=None
     )
@@ -255,7 +253,6 @@ class TestBrandManagementProperties:
         invalid_name=st.sampled_from(["", "   ", "\t\n", "  \t  "])
     )
     @hypothesis_settings(
-        max_examples=100,
         suppress_health_check=[HealthCheck.function_scoped_fixture],
         deadline=None
     )

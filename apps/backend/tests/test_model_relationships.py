@@ -36,7 +36,7 @@ class TestModelRelationships:
         filename=st.text(min_size=1, max_size=100, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd", "Pc", "Pd"))),
         file_type=st.sampled_from(['pdf', 'jpg', 'png', 'doc', 'txt'])
     )
-    @settings(max_examples=100, suppress_health_check=[HealthCheck.function_scoped_fixture])
+    @settings( suppress_health_check=[HealthCheck.function_scoped_fixture])
     @pytest.mark.asyncio
     async def test_data_isolation_by_user(
         self, 

@@ -10,6 +10,8 @@ from app.core.database import get_db
 from app.core.auth import get_current_user
 from app.models.user import User
 from app.models.brand import Brand
+from app.models.collaboration import Collaboration
+from sqlalchemy import func
 from app.schemas.brand import BrandCreate, BrandUpdate, BrandResponse
 
 
@@ -143,6 +145,18 @@ async def delete_brand(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Brand not found"
+        )
+    
+    # Check if brand has active collaborations
+    collab_count_result = await db.execute(
+        select(func.count(Collaboration.id)).where(Collaboration.brand_id == brand_id)
+    )
+    collab_count = collab_count_result.scalar() or 0
+    
+    if collab_count > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot delete brand with active collaborations. Please delete or reassign them first."
         )
     
     await db.delete(brand)

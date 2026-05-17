@@ -70,7 +70,7 @@ class TestConversationAndFileProperties:
         )
     )
     @settings(
-        max_examples=100, 
+         
         deadline=None,
         suppress_health_check=[HealthCheck.function_scoped_fixture]
     )
@@ -138,7 +138,7 @@ class TestConversationAndFileProperties:
         message=st.text(min_size=1, max_size=1000).filter(lambda x: '\x00' not in x)
     )
     @settings(
-        max_examples=100, 
+         
         deadline=None,
         suppress_health_check=[HealthCheck.function_scoped_fixture]
     )
@@ -193,7 +193,7 @@ class TestConversationAndFileProperties:
         file_extension=st.sampled_from(['.txt', '.pdf', '.jpg', '.png', '.doc'])
     )
     @settings(
-        max_examples=100, 
+         
         deadline=None,
         suppress_health_check=[HealthCheck.function_scoped_fixture]
     )
@@ -264,7 +264,7 @@ class TestConversationAndFileProperties:
         file_extension=st.sampled_from(['.txt', '.pdf', '.jpg', '.png', '.doc'])
     )
     @settings(
-        max_examples=100, 
+         
         deadline=None,
         suppress_health_check=[HealthCheck.function_scoped_fixture]
     )
@@ -333,7 +333,7 @@ class TestConversationAndFileProperties:
         file_content=st.binary(min_size=1, max_size=100)
     )
     @settings(
-        max_examples=100, 
+         
         deadline=None,
         suppress_health_check=[HealthCheck.function_scoped_fixture]
     )

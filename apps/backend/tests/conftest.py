@@ -1,12 +1,22 @@
 import pytest
 import pytest_asyncio
 import asyncio
+import os
+from hypothesis import settings as hypothesis_settings, HealthCheck
 from sqlalchemy import create_engine, text
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 from app.core.database import Base
 
+# Configure Hypothesis profiles
+hypothesis_settings.register_profile("ci", max_examples=100, deadline=None)
+hypothesis_settings.register_profile("dev", max_examples=10, deadline=None)
+hypothesis_settings.register_profile("fast", max_examples=2, deadline=None)
+
+# Set the default profile based on an environment variable, defaulting to "dev" for local runs
+profile = os.getenv("HYPOTHESIS_PROFILE", "dev")
+hypothesis_settings.load_profile(profile)
 
 @pytest_asyncio.fixture
 async def test_engine():

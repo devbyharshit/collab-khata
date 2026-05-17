@@ -250,13 +250,13 @@ async def update_collaboration_status(
     
     # Define valid status transitions
     valid_transitions = {
-        CollaborationStatus.LEAD: [CollaborationStatus.NEGOTIATING],
-        CollaborationStatus.NEGOTIATING: [CollaborationStatus.CONFIRMED, CollaborationStatus.LEAD],
-        CollaborationStatus.CONFIRMED: [CollaborationStatus.IN_PRODUCTION, CollaborationStatus.NEGOTIATING],
-        CollaborationStatus.IN_PRODUCTION: [CollaborationStatus.POSTED, CollaborationStatus.CONFIRMED],
-        CollaborationStatus.POSTED: [CollaborationStatus.PAYMENT_PENDING, CollaborationStatus.IN_PRODUCTION],
-        CollaborationStatus.PAYMENT_PENDING: [CollaborationStatus.OVERDUE, CollaborationStatus.PAID],
-        CollaborationStatus.OVERDUE: [CollaborationStatus.PAID, CollaborationStatus.PAYMENT_PENDING],
+        CollaborationStatus.LEAD: [CollaborationStatus.NEGOTIATING, CollaborationStatus.CLOSED],
+        CollaborationStatus.NEGOTIATING: [CollaborationStatus.CONFIRMED, CollaborationStatus.LEAD, CollaborationStatus.CLOSED],
+        CollaborationStatus.CONFIRMED: [CollaborationStatus.IN_PRODUCTION, CollaborationStatus.NEGOTIATING, CollaborationStatus.CLOSED],
+        CollaborationStatus.IN_PRODUCTION: [CollaborationStatus.POSTED, CollaborationStatus.CONFIRMED, CollaborationStatus.CLOSED],
+        CollaborationStatus.POSTED: [CollaborationStatus.PAYMENT_PENDING, CollaborationStatus.IN_PRODUCTION, CollaborationStatus.CLOSED],
+        CollaborationStatus.PAYMENT_PENDING: [CollaborationStatus.OVERDUE, CollaborationStatus.PAID, CollaborationStatus.CLOSED],
+        CollaborationStatus.OVERDUE: [CollaborationStatus.PAID, CollaborationStatus.PAYMENT_PENDING, CollaborationStatus.CLOSED],
         CollaborationStatus.PAID: [CollaborationStatus.CLOSED],
         CollaborationStatus.CLOSED: []  # Terminal state
     }
