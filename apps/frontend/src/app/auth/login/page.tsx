@@ -70,24 +70,30 @@ export default function LoginPage() {
 
   return (
     <AuthGuard requireAuth={false}>
-      <div className="flex min-h-screen items-center justify-center p-4 bg-gray-50">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
-              Welcome back
-            </CardTitle>
-            <CardDescription className="text-center">
-              Sign in to your Collab Khata account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
+      <div className="flex min-h-screen items-center justify-center p-4 bg-transparent">
+        <div className="w-full max-w-md">
+          {/* Logo or Brand Element could go here */}
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Collab Khata</h1>
+            <p className="text-gray-500 mt-2">Manage your brand partnerships efficiently</p>
+          </div>
+          <Card className="border-0 shadow-2xl glass-panel">
+            <CardHeader className="space-y-1 pb-8">
+              <CardTitle className="text-2xl font-bold text-center">
+                Welcome back
+              </CardTitle>
+              <CardDescription className="text-center">
+                Sign in to your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
@@ -149,6 +155,7 @@ export default function LoginPage() {
             </div>
           </CardFooter>
         </Card>
+        </div>
       </div>
     </AuthGuard>
   )

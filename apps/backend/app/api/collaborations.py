@@ -11,6 +11,7 @@ from app.core.auth import get_current_user
 from app.models.user import User
 from app.models.brand import Brand
 from app.models.collaboration import Collaboration, CollaborationStatus
+from app.models.payment import PaymentExpectation, PaymentStatus
 from app.schemas.collaboration import (
     CollaborationCreate, 
     CollaborationUpdate, 
@@ -116,6 +117,17 @@ async def create_collaboration(
     await db.commit()
     await db.refresh(new_collaboration)
     
+    # Auto-generate payment expectation if agreed_amount > 0
+    if new_collaboration.agreed_amount and new_collaboration.agreed_amount > 0:
+        new_payment = PaymentExpectation(
+            collaboration_id=new_collaboration.id,
+            expected_amount=new_collaboration.agreed_amount,
+            status=PaymentStatus.PENDING,
+            promised_date=new_collaboration.deadline_date
+        )
+        db.add(new_payment)
+        await db.commit()
+
     # Reload with brand relationship
     result = await db.execute(
         select(Collaboration).options(

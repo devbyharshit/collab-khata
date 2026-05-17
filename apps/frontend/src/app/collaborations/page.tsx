@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import apiClient from '@/lib/api-client'
+import { BrandAutocomplete } from '@/components/brand-autocomplete'
 import {
   Brand,
   Collaboration,
@@ -234,7 +235,7 @@ export default function CollaborationsPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+      <div className="min-h-screen bg-transparent p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -413,21 +414,14 @@ export default function CollaborationsPage() {
               <Label htmlFor="create-brand">
                 Brand <span className="text-red-500">*</span>
               </Label>
-              <Select
-                value={formData.brand_id.toString()}
-                onValueChange={(value) => handleInputChange('brand_id', parseInt(value))}
-              >
-                <SelectTrigger id="create-brand" className="h-12">
-                  <SelectValue placeholder="Select a brand" />
-                </SelectTrigger>
-                <SelectContent>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand.id} value={brand.id.toString()}>
-                      {brand.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BrandAutocomplete
+                brands={brands}
+                value={formData.brand_id}
+                onChange={(value) => handleInputChange('brand_id', value)}
+                onBrandCreated={(newBrand) => {
+                  setBrands(prev => [newBrand, ...prev])
+                }}
+              />
               {formErrors.brand_id && (
                 <p className="text-sm text-red-600">{formErrors.brand_id}</p>
               )}

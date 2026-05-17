@@ -78,7 +78,7 @@ export default function DashboardPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+      <div className="min-h-screen bg-transparent p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6">
@@ -245,7 +245,7 @@ export default function DashboardPage() {
                       {dashboardData.collaboration_status_counts.map((statusCount) => (
                         <div
                           key={statusCount.status}
-                          className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                          className="flex items-center justify-between p-3 rounded-lg bg-transparent hover:bg-gray-100 transition-colors"
                         >
                           <div className="flex items-center gap-3">
                             <span

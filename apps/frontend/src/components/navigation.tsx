@@ -64,24 +64,27 @@ export function Navigation() {
   return (
     <>
       {/* Desktop Navigation - Enhanced with User Menu */}
-      <nav className="hidden md:block bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <nav className="hidden md:block glass-panel sticky top-4 z-50 mx-4 lg:mx-8 rounded-2xl mb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-8">
               <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <span className="text-xl font-bold text-gray-900">Collab Khata</span>
+                <div className="bg-primary text-white p-2 rounded-xl shadow-sm">
+                  <LayoutDashboard className="h-5 w-5" />
+                </div>
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Collab Khata</span>
               </Link>
-              <div className="flex gap-1">
+              <div className="flex gap-2">
                 {navItems.map((item) => {
                   const Icon = item.icon
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                         isActive(item.href)
-                          ? 'bg-gray-100 text-gray-900'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                          ? 'bg-primary text-white shadow-md shadow-primary/20'
+                          : 'text-gray-600 hover:bg-primary/10 hover:text-primary'
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -95,9 +98,9 @@ export function Navigation() {
             {/* User Menu Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 h-10">
-                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gray-200">
-                    <User className="h-4 w-4 text-gray-600" />
+                <Button variant="ghost" className="flex items-center gap-2 h-10 rounded-full hover:bg-white/50">
+                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/10 text-primary">
+                    <User className="h-4 w-4" />
                   </div>
                   <span className="text-sm font-medium text-gray-700 max-w-[150px] truncate">
                     {user?.email}
@@ -148,7 +151,7 @@ export function Navigation() {
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-gray-200 pb-3 bg-white">
+          <div className="border-t border-gray-200 pb-3 bg-white/80 backdrop-blur-md">
             <div className="px-2 pt-2 space-y-1">
               {navItems.map((item) => {
                 const Icon = item.icon
@@ -157,9 +160,9 @@ export function Navigation() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-md text-base font-medium transition-colors min-h-[48px] ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-colors min-h-[48px] ${
                       isActive(item.href)
-                        ? 'bg-gray-100 text-gray-900'
+                        ? 'bg-primary/10 text-primary'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'
                     }`}
                   >
@@ -175,7 +178,7 @@ export function Navigation() {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-3 px-4 py-3 rounded-md text-base font-medium text-red-600 hover:bg-red-50 active:bg-red-100 w-full transition-colors min-h-[48px]"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-red-600 hover:bg-red-50 active:bg-red-100 w-full transition-colors min-h-[48px]"
                 >
                   <LogOut className="h-5 w-5 flex-shrink-0" />
                   Logout
@@ -187,7 +190,7 @@ export function Navigation() {
       </nav>
 
       {/* Bottom Navigation for Mobile - Enhanced with larger touch targets */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg safe-area-inset-bottom">
+      <nav className="md:hidden fixed bottom-4 left-4 right-4 glass-panel rounded-2xl z-50 shadow-2xl safe-area-inset-bottom">
         <div className="grid grid-cols-3 gap-1 px-2 py-2">
           {navItems.map((item) => {
             const Icon = item.icon
@@ -196,16 +199,16 @@ export function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 py-2 rounded-lg transition-all min-h-[56px] ${
+                className={`flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all min-h-[56px] ${
                   active
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100 active:scale-95'
+                    ? 'bg-primary/10 text-primary scale-105'
+                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 active:scale-95'
                 }`}
                 aria-label={item.name}
                 aria-current={active ? 'page' : undefined}
               >
-                <Icon className={`h-6 w-6 ${active ? 'text-gray-900' : 'text-gray-600'}`} />
-                <span className={`text-xs font-medium ${active ? 'text-gray-900' : 'text-gray-600'}`}>
+                <Icon className={`h-6 w-6 ${active ? 'text-primary' : 'text-gray-500'}`} />
+                <span className={`text-xs font-semibold ${active ? 'text-primary' : 'text-gray-500'}`}>
                   {item.name}
                 </span>
               </Link>

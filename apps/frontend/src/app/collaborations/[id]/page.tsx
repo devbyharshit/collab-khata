@@ -50,6 +50,7 @@ import {
   Plus,
   Download,
   Upload,
+  CheckCircle,
 } from 'lucide-react'
 
 const STATUS_COLORS: Record<CollaborationStatus, string> = {
@@ -209,6 +210,24 @@ export default function CollaborationDetailPage() {
       setError(err?.error?.message || 'Failed to create payment expectation')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const handleMarkFullyPaid = async (payment: PaymentExpectation) => {
+    try {
+      const remainingAmount = payment.expected_amount - (payment.total_credited || 0)
+      if (remainingAmount <= 0) return
+
+      const today = new Date().toISOString().split('T')[0]
+      await apiClient.post(`/api/payments/${payment.id}/credits`, {
+        credited_amount: remainingAmount,
+        credited_date: today,
+        reference_note: 'Marked as fully paid',
+      })
+      toast.success('Payment marked as fully paid')
+      fetchData()
+    } catch (err: any) {
+      toast.error(err?.error?.message || 'Failed to record payment')
     }
   }
 
@@ -411,7 +430,7 @@ export default function CollaborationDetailPage() {
   if (loading) {
     return (
       <AuthGuard requireAuth={true}>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-transparent flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
         </div>
       </AuthGuard>
@@ -421,7 +440,7 @@ export default function CollaborationDetailPage() {
   if (!collaboration) {
     return (
       <AuthGuard requireAuth={true}>
-        <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+        <div className="min-h-screen bg-transparent p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             <Card className="border-red-200 bg-red-50">
               <CardContent className="pt-6">
@@ -442,7 +461,7 @@ export default function CollaborationDetailPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+      <div className="min-h-screen bg-transparent p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
@@ -561,7 +580,7 @@ export default function CollaborationDetailPage() {
                       {payments.map((payment) => (
                         <div
                           key={payment.id}
-                          className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                          className="border rounded-lg p-4 hover:bg-transparent transition-colors"
                         >
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
@@ -581,7 +600,7 @@ export default function CollaborationDetailPage() {
                                       ? 'bg-red-50 text-red-700'
                                       : payment.status === 'Partial'
                                       ? 'bg-yellow-50 text-yellow-700'
-                                      : 'bg-gray-50 text-gray-700'
+                                      : 'bg-transparent text-gray-700'
                                   }
                                 >
                                   {payment.status}
@@ -608,14 +627,27 @@ export default function CollaborationDetailPage() {
                                 <p className="text-sm text-gray-600 mt-2">{payment.notes}</p>
                               )}
                             </div>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openCreditDialog(payment)}
-                              disabled={payment.status === 'Completed'}
-                            >
-                              Record Payment
-                            </Button>
+                            <div className="flex gap-2">
+                              {payment.expected_amount > (payment.total_credited || 0) && (
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={() => handleMarkFullyPaid(payment)}
+                                  className="bg-green-600 hover:bg-green-700 text-white border-transparent"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-2" />
+                                  Mark Fully Paid
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openCreditDialog(payment)}
+                                disabled={payment.status === 'Completed'}
+                              >
+                                Record Partial
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -694,7 +726,7 @@ export default function CollaborationDetailPage() {
                       {files.map((file) => (
                         <div
                           key={file.id}
-                          className="flex items-center justify-between p-2 border rounded hover:bg-gray-50"
+                          className="flex items-center justify-between p-2 border rounded hover:bg-transparent"
                         >
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             <Paperclip className="h-4 w-4 text-gray-400 flex-shrink-0" />
@@ -920,7 +952,7 @@ export default function CollaborationDetailPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             {selectedPayment && (
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="bg-transparent p-3 rounded-lg">
                 <p className="text-sm text-gray-600">Expected Amount</p>
                 <p className="font-semibold">
                   {formatCurrency(selectedPayment.expected_amount, collaboration.currency)}

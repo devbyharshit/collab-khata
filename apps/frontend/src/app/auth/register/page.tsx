@@ -78,16 +78,21 @@ export default function RegisterPage() {
 
   return (
     <AuthGuard requireAuth={false}>
-      <div className="flex min-h-screen items-center justify-center p-4 bg-gray-50">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
-              Create an account
-            </CardTitle>
-            <CardDescription className="text-center">
-              Start managing your brand collaborations
-            </CardDescription>
-          </CardHeader>
+      <div className="flex min-h-screen items-center justify-center p-4 bg-transparent">
+        <div className="w-full max-w-md">
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Collab Khata</h1>
+            <p className="text-gray-500 mt-2">Start managing your brand collaborations</p>
+          </div>
+          <Card className="border-0 shadow-2xl glass-panel">
+            <CardHeader className="space-y-1 pb-8">
+              <CardTitle className="text-2xl font-bold text-center">
+                Create an account
+              </CardTitle>
+              <CardDescription className="text-center">
+                Enter your details to get started
+              </CardDescription>
+            </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -176,6 +181,7 @@ export default function RegisterPage() {
             </div>
           </CardFooter>
         </Card>
+        </div>
       </div>
     </AuthGuard>
   )
