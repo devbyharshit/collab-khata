@@ -1,6 +1,8 @@
 'use client'
 
 import { AuthGuard } from '@/components/auth-guard'
+import { BrandAutocomplete } from '@/components/brand-autocomplete'
+import { PageHeader } from '@/components/page-header'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,7 +25,6 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import apiClient from '@/lib/api-client'
-import { BrandAutocomplete } from '@/components/brand-autocomplete'
 import {
   Brand,
   Collaboration,
@@ -37,7 +38,6 @@ import {
   CircleDollarSign,
   Eye,
   Filter,
-  IndianRupee,
   Plus,
   Search
 } from 'lucide-react'
@@ -235,24 +235,20 @@ export default function CollaborationsPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-transparent p-4 md:p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="w-full space-y-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Collaborations</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Track and manage your brand partnerships
-              </p>
-            </div>
-            <Button onClick={openCreateDialog} className="w-full sm:w-auto">
-              <Plus className="h-4 w-4 mr-2" />
-              New Collab
+          <PageHeader 
+          title="Collaborations" 
+          description="Track and manage your brand partnerships." 
+          action={
+            <Button onClick={openCreateDialog} className="w-full sm:w-auto rounded-full h-12 px-6">
+              <Plus className="h-4 w-4 mr-2" /> New Collab
             </Button>
-          </div>
+          }
+        />
 
           {/* Search and Filter Bar */}
-          <Card className="mb-6">
+          <Card>
             <CardContent className="pt-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
@@ -311,9 +307,8 @@ export default function CollaborationsPage() {
           {!loading && (
             <>
               {filteredCollaborations.length === 0 ? (
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center py-12">
+                <Card className="flex flex-col items-center justify-center py-16">
+                  <CardContent className="flex flex-col items-center p-0">
                       <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {searchQuery || statusFilter !== 'all'
@@ -331,7 +326,6 @@ export default function CollaborationsPage() {
                           Create Your First Collaboration
                         </Button>
                       )}
-                    </div>
                   </CardContent>
                 </Card>
               ) : (
@@ -339,7 +333,7 @@ export default function CollaborationsPage() {
                   {filteredCollaborations.map((collab) => (
                     <Card
                       key={collab.id}
-                      className="hover:shadow-lg transition-shadow cursor-pointer"
+                      className="hover:shadow-soft-md transition-shadow cursor-pointer border-none bg-white rounded-[2rem] shadow-soft"
                       onClick={() => router.push(`/collaborations/${collab.id}`)}
                     >
                       <CardHeader>
@@ -398,7 +392,6 @@ export default function CollaborationsPage() {
             </>
           )}
         </div>
-      </div>
 
       {/* Create Collaboration Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>

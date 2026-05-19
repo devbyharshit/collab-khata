@@ -118,8 +118,7 @@ dist
 *.swo
 
 # Slingshot
-.slingshot/*_cache.json
-.slingshot/prompts_cache.json
+.slingshot/*
 
 # Python
 __pycache__/
@@ -246,3 +245,5 @@ cython_debug/
 # Uploads
 uploads/
 apps/backend/uploads/
+.opencode/
+.slingshot/

@@ -26,6 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import apiClient from '@/lib/api-client'
+import { toast } from 'sonner'
 import {
   Collaboration,
   CollaborationStatus,
@@ -95,9 +96,17 @@ export default function CollaborationDetailPage() {
   const [isCreditDialogOpen, setIsCreditDialogOpen] = useState(false)
   const [isConversationDialogOpen, setIsConversationDialogOpen] = useState(false)
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [selectedPayment, setSelectedPayment] = useState<PaymentExpectation | null>(null)
 
   // Form states
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    platform: '',
+    agreed_amount: 0,
+    deadline_date: '',
+    deliverables_text: '',
+  })
   const [statusFormData, setStatusFormData] = useState<CollaborationStatusUpdateRequest>({
     status: CollaborationStatus.Lead,
     posting_date: '',
@@ -225,7 +234,7 @@ export default function CollaborationDetailPage() {
         reference_note: 'Marked as fully paid',
       })
       toast.success('Payment marked as fully paid')
-      fetchData()
+      fetchCollaborationDetails()
     } catch (err: any) {
       toast.error(err?.error?.message || 'Failed to record payment')
     }
@@ -366,6 +375,42 @@ export default function CollaborationDetailPage() {
     setIsFileDialogOpen(true)
   }
 
+  const openEditDialog = () => {
+    if (!collaboration) return
+    setEditFormData({
+      title: collaboration.title || '',
+      platform: collaboration.platform || '',
+      agreed_amount: collaboration.agreed_amount || 0,
+      deadline_date: collaboration.deadline_date ? collaboration.deadline_date.split('T')[0] : '',
+      deliverables_text: collaboration.deliverables_text || '',
+    })
+    setFormErrors({})
+    setIsEditDialogOpen(true)
+  }
+
+  const handleEditSubmit = async () => {
+    const errors: Record<string, string> = {}
+    if (!editFormData.title.trim()) errors.title = 'Title is required'
+    if (editFormData.agreed_amount < 0) errors.agreed_amount = 'Amount cannot be negative'
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      return
+    }
+
+    try {
+      setSubmitting(true)
+      await apiClient.put(`/api/collaborations/${collaborationId}`, editFormData)
+      setIsEditDialogOpen(false)
+      fetchCollaborationDetails()
+      toast.success('Collaboration updated successfully')
+    } catch (err: any) {
+      toast.error(err?.error?.message || 'Failed to update collaboration')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   const resetPaymentForm = () => {
     setPaymentFormData({
       expected_amount: 0,
@@ -427,6 +472,21 @@ export default function CollaborationDetailPage() {
     return STATUS_WORKFLOW.slice(currentIndex + 1)
   }
 
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      Lead: 'Lead',
+      Negotiating: 'Negotiating',
+      Confirmed: 'Confirmed',
+      InProduction: 'In Production',
+      Posted: 'Posted',
+      PaymentPending: 'Payment Pending',
+      Overdue: 'Overdue',
+      Paid: 'Paid',
+      Closed: 'Closed',
+    }
+    return labels[status] || status
+  }
+
   if (loading) {
     return (
       <AuthGuard requireAuth={true}>
@@ -440,8 +500,8 @@ export default function CollaborationDetailPage() {
   if (!collaboration) {
     return (
       <AuthGuard requireAuth={true}>
-        <div className="min-h-screen bg-transparent p-4 md:p-6">
-          <div className="max-w-7xl mx-auto">
+        <div className="w-full">
+          <div className="space-y-6 w-full">
             <Card className="border-red-200 bg-red-50">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 text-red-800">
@@ -461,25 +521,67 @@ export default function CollaborationDetailPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-transparent p-4 md:p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push('/collaborations')}
-              className="h-10 w-10 p-0"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                {collaboration.title}
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">{collaboration.brand?.name}</p>
+      <div className="w-full space-y-6">
+          {/* Hero Card Header */}
+          <div className="relative overflow-hidden bg-primary rounded-[2rem] p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(10,59,43,0.3)] border border-white/5">
+            {/* Ambient Blobs */}
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-secondary/10 blur-[100px] rounded-full pointer-events-none" aria-hidden="true" />
+            <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-white/5 blur-[80px] rounded-full pointer-events-none" aria-hidden="true" />
+
+            {/* Content Container */}
+            <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-12">
+              <div className="space-y-4">
+                
+                {/* Pre-title Row */}
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => router.push('/collaborations')}
+                    className="text-white/60 hover:text-white hover:bg-white/10 rounded-full h-8 w-8 p-0 flex items-center justify-center -ml-2 transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="px-3 py-1 bg-white/10 text-white/90 border border-white/10 rounded-full text-xs font-semibold backdrop-blur-sm">
+                    {collaboration.platform}
+                  </span>
+                  <Badge className="bg-secondary/20 text-secondary hover:bg-secondary/30 border-none font-bold">
+                    {getStatusLabel(collaboration.status)}
+                  </Badge>
+                </div>
+
+                {/* Title & Brand */}
+                <div className="space-y-2">
+                  <h1 className="text-white font-extrabold text-3xl md:text-4xl lg:text-5xl tracking-tight leading-tight">
+                    {collaboration.title}
+                  </h1>
+                  <p className="text-emerald-50/80 text-lg font-medium flex items-center gap-2 mt-2">
+                    <Briefcase className="h-5 w-5 opacity-70" />
+                    {collaboration.brand?.name}
+                  </p>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <Button 
+                  variant="outline" 
+                  onClick={openEditDialog}
+                  className="bg-white/10 text-white font-semibold backdrop-blur-md border-white/10 h-12 px-6 rounded-full hover:bg-white/20 hover:text-white hover:-translate-y-0.5 transition-all duration-300"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Details
+                </Button>
+                <Button 
+                  variant="default" 
+                  onClick={openStatusDialog}
+                  className="bg-secondary text-primary font-bold h-12 px-6 rounded-full shadow-[0_8px_16px_-6px_rgba(167,243,208,0.4)] hover:bg-[#8EF1C3] hover:-translate-y-0.5 transition-all duration-300"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Change Status
+                </Button>
+              </div>
             </div>
-            <Badge className={STATUS_COLORS[collaboration.status]}>{collaboration.status}</Badge>
           </div>
 
           {/* Error Alert */}
@@ -501,7 +603,7 @@ export default function CollaborationDetailPage() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Collaboration Details */}
-              <Card>
+              <Card className="bg-white border-none rounded-[2rem] shadow-soft">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Collaboration Details</CardTitle>
@@ -556,7 +658,7 @@ export default function CollaborationDetailPage() {
               </Card>
 
               {/* Payment Expectations */}
-              <Card>
+              <Card className="bg-white border-none rounded-[2rem] shadow-soft">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Payment Expectations</CardTitle>
@@ -657,7 +759,7 @@ export default function CollaborationDetailPage() {
               </Card>
 
               {/* Conversation Logs */}
-              <Card>
+              <Card className="bg-white border-none rounded-[2rem] shadow-soft">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Conversation Logs</CardTitle>
@@ -705,7 +807,7 @@ export default function CollaborationDetailPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* File Attachments */}
-              <Card>
+              <Card className="bg-white border-none rounded-[2rem] shadow-soft">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">Files</CardTitle>
@@ -748,7 +850,7 @@ export default function CollaborationDetailPage() {
               </Card>
 
               {/* Quick Stats */}
-              <Card>
+              <Card className="bg-white border-none rounded-[2rem] shadow-soft">
                 <CardHeader>
                   <CardTitle className="text-lg">Quick Stats</CardTitle>
                 </CardHeader>
@@ -772,7 +874,6 @@ export default function CollaborationDetailPage() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Status Update Dialog */}
       <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
@@ -1153,6 +1254,95 @@ export default function CollaborationDetailPage() {
             </Button>
             <Button onClick={handleFileUpload} disabled={submitting} className="w-full sm:w-auto">
               {submitting ? 'Uploading...' : 'Upload File'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Edit Details Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] rounded-[2rem] p-6">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-2xl font-bold text-gray-900">Edit Collaboration</DialogTitle>
+            <DialogDescription>
+              Update the core details of this project.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="edit-title" className="text-xs uppercase tracking-wider font-semibold text-gray-500">Project Title <span className="text-red-500">*</span></Label>
+              <Input
+                id="edit-title"
+                value={editFormData.title}
+                onChange={(e) => setEditFormData((prev) => ({ ...prev, title: e.target.value }))}
+                className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white"
+              />
+              {formErrors.title && <p className="text-sm text-red-600">{formErrors.title}</p>}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <Label htmlFor="edit-platform" className="text-xs uppercase tracking-wider font-semibold text-gray-500">Platform</Label>
+                <Input
+                  id="edit-platform"
+                  value={editFormData.platform}
+                  onChange={(e) => setEditFormData((prev) => ({ ...prev, platform: e.target.value }))}
+                  className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white"
+                  placeholder="e.g. YouTube, Instagram"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-amount" className="text-xs uppercase tracking-wider font-semibold text-gray-500">Agreed Amount</Label>
+                <Input
+                  id="edit-amount"
+                  type="number"
+                  min="0"
+                  value={editFormData.agreed_amount || ''}
+                  onChange={(e) => setEditFormData((prev) => ({ ...prev, agreed_amount: parseFloat(e.target.value) || 0 }))}
+                  className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-deadline" className="text-xs uppercase tracking-wider font-semibold text-gray-500">Deadline</Label>
+              <Input
+                id="edit-deadline"
+                type="date"
+                value={editFormData.deadline_date}
+                onChange={(e) => setEditFormData((prev) => ({ ...prev, deadline_date: e.target.value }))}
+                className="h-12 rounded-xl bg-gray-50 border-gray-200 focus:bg-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-deliverables" className="text-xs uppercase tracking-wider font-semibold text-gray-500">Deliverables</Label>
+              <Textarea
+                id="edit-deliverables"
+                value={editFormData.deliverables_text}
+                onChange={(e) => setEditFormData((prev) => ({ ...prev, deliverables_text: e.target.value }))}
+                rows={4}
+                className="rounded-xl bg-gray-50 border-gray-200 focus:bg-white resize-none"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="mt-6 gap-3 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(false)}
+              disabled={submitting}
+              className="rounded-full w-full sm:w-auto border-gray-200 hover:bg-gray-50 h-10"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleEditSubmit}
+              disabled={submitting}
+              className="rounded-full w-full sm:w-auto bg-primary hover:bg-primary/90 text-white shadow-soft h-10"
+            >
+              {submitting ? 'Saving...' : 'Save Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>

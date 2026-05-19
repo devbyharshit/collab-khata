@@ -129,7 +129,7 @@ export function BrandAutocomplete({ brands, value, onChange, onBrandCreated }: B
                       disabled={isCreating}
                     >
                       {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-                      Create "{searchQuery}"
+                      Create &quot;{searchQuery}&quot;
                     </Button>
                   )}
                 </div>
@@ -187,7 +187,7 @@ export function BrandAutocomplete({ brands, value, onChange, onBrandCreated }: B
               <CommandGroup heading="Create">
                 <CommandItem value={`create-${searchQuery}`} onSelect={() => handleCreateBrand(searchQuery)}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Create custom brand "{searchQuery}"
+                  Create custom brand &quot;{searchQuery}&quot;
                 </CommandItem>
               </CommandGroup>
             )}

@@ -1,12 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { AuthGuard } from '@/components/auth-guard'
+import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Dialog,
   DialogContent,
@@ -15,9 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import apiClient from '@/lib/api-client'
 import { Brand, BrandCreateRequest, BrandUpdateRequest } from '@/types'
-import { AlertCircle, Plus, Search, Edit, Trash2, Building2, Mail, MessageSquare } from 'lucide-react'
+import { AlertCircle, Building2, Edit, Mail, MessageSquare, Plus, Search, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export default function BrandsPage() {
   const [brands, setBrands] = useState<Brand[]>([])
@@ -205,29 +206,20 @@ export default function BrandsPage() {
 
   return (
     <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-transparent p-4 md:p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="w-full space-y-6">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Brands</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Manage your brand contacts and partnerships
-              </p>
-            </div>
-            <div className="flex gap-2 w-full sm:w-auto">
-              <Button
-                onClick={openCreateDialog}
-                className="flex-1 sm:flex-none"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Brand
-              </Button>
-            </div>
-          </div>
+          <PageHeader 
+          title="Brands" 
+          description="Manage your brand contacts and partnerships." 
+          action={
+            <Button onClick={openCreateDialog} className="flex-1 sm:flex-none rounded-full h-12 px-6">
+              <Plus className="h-4 w-4 mr-2" /> Add Brand
+            </Button>
+          }
+        />
 
           {/* Search Bar */}
-          <Card className="mb-6">
+          <Card>
             <CardContent className="pt-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -273,10 +265,9 @@ export default function BrandsPage() {
           {!loading && (
             <>
               {filteredBrands.length === 0 ? (
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center py-12">
-                      <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <Card className="flex flex-col items-center justify-center py-16">
+                  <CardContent className="flex flex-col items-center p-0">
+                      <Building2 className="h-16 w-16 text-gray-300 mb-4" />
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {searchQuery ? 'No brands found' : 'No brands yet'}
                       </h3>
@@ -291,13 +282,12 @@ export default function BrandsPage() {
                           Add Your First Brand
                         </Button>
                       )}
-                    </div>
                   </CardContent>
                 </Card>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredBrands.map((brand) => (
-                    <Card key={brand.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={brand.id} className="hover:shadow-soft-md">
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -313,7 +303,7 @@ export default function BrandsPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => openEditDialog(brand)}
-                              className="h-8 w-8 p-0"
+                              className="h-10 w-10 p-0 rounded-full"
                               data-testid={`edit-brand-${brand.id}`}
                             >
                               <Edit className="h-4 w-4" />
@@ -358,7 +348,6 @@ export default function BrandsPage() {
             </>
           )}
         </div>
-      </div>
 
       {/* Create Brand Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
