@@ -72,6 +72,11 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      boxShadow: {
+        'soft': '0 8px 30px rgba(0,0,0,0.04)',
+        'soft-md': '0 15px 40px rgba(0,0,0,0.06)',
+        'soft-lg': '0 25px 50px rgba(0,0,0,0.08)',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],
