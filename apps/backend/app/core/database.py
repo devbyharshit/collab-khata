@@ -13,7 +13,11 @@ sync_engine = create_engine(
 # Async engine for FastAPI operations
 async_engine = create_async_engine(
     settings.database_url.replace("postgresql://", "postgresql+asyncpg://"),
-    echo=settings.debug
+    echo=settings.debug,
+    connect_args={
+        "prepared_statement_cache_size": 0,
+        "statement_cache_size": 0
+    }
 )
 
 # Session makers
