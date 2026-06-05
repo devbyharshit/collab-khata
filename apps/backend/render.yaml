@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: collab-khata-api
+    env: python
+    buildCommand: "pip install -r requirements.txt && alembic upgrade head"
+    startCommand: "gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: collab-khata-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: "https://your-vercel-frontend-url.vercel.app,http://localhost:3000"
+      - key: DEBUG
+        value: "False"
+
+databases:
+  - name: collab-khata-db
+    databaseName: collab_khata
+    user: collab_user

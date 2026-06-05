@@ -32,4 +32,4 @@ hypothesis==6.92.1
 greenlet>=3.0.0
 
 # CORS
-#python-cors==1.7.0
+#python-cors==1.7.0gunicorn==21.2.0
