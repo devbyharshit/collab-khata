@@ -147,15 +147,6 @@ export default function CollaborationsPage() {
         console.error('Failed to load brands', err)
       }
     }
-  } catch (err: any) {
-      setError(err?.error?.message || 'Failed to load data')
-      // Set empty arrays on error
-      setCollaborations([])
-      setFilteredCollaborations([])
-      setBrands([])
-    } finally {
-      setLoading(false)
-    }
   }
 
   const validateForm = (data: CollaborationCreateRequest): boolean => {
