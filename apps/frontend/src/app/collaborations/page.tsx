@@ -120,21 +120,34 @@ export default function CollaborationsPage() {
     try {
       setLoading(true)
       setError(null)
-      const [collabsResponse, brandsResponse] = await Promise.all([
-        apiClient.get<{ collaborations: Collaboration[], total_count: number, filtered_count: number }>('/api/collaborations'),
-        apiClient.get<Brand[]>('/api/brands'),
-      ])
+      const response = await apiClient.get<{ collaborations: Collaboration[], total_count: number, filtered_count: number }>('/api/collaborations')
       
-      // Extract collaborations array from the response
-      const collabsData = Array.isArray(collabsResponse.data?.collaborations) 
-        ? collabsResponse.data.collaborations 
+      const collabsData = Array.isArray(response.data?.collaborations) 
+        ? response.data.collaborations 
         : []
-      const brandsData = Array.isArray(brandsResponse.data) ? brandsResponse.data : []
       
       setCollaborations(collabsData)
       setFilteredCollaborations(collabsData)
-      setBrands(brandsData)
     } catch (err: any) {
+      setError(err?.error?.message || 'Failed to load collaborations')
+      setCollaborations([])
+      setFilteredCollaborations([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchBrandsIfNeeded = async () => {
+    if (brands.length === 0) {
+      try {
+        const response = await apiClient.get<Brand[]>('/api/brands')
+        const brandsData = Array.isArray(response.data) ? response.data : []
+        setBrands(brandsData)
+      } catch (err) {
+        console.error('Failed to load brands', err)
+      }
+    }
+  } catch (err: any) {
       setError(err?.error?.message || 'Failed to load data')
       // Set empty arrays on error
       setCollaborations([])
@@ -184,9 +197,10 @@ export default function CollaborationsPage() {
     }
   }
 
-  const openCreateDialog = () => {
+  const openCreateDialog = async () => {
     resetForm()
     setIsCreateDialogOpen(true)
+    await fetchBrandsIfNeeded()
   }
 
   const resetForm = () => {

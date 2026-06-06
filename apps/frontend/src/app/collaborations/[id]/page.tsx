@@ -523,7 +523,7 @@ export default function CollaborationDetailPage() {
     <AuthGuard requireAuth={true}>
       <div className="w-full space-y-6">
           {/* Hero Card Header */}
-          <div className="relative overflow-hidden bg-primary rounded-[2rem] p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(10,59,43,0.3)] border border-white/5">
+          <div className="relative overflow-hidden bg-primary rounded-[2rem] p-6 sm:p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(10,59,43,0.3)] border border-white/5">
             {/* Ambient Blobs */}
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-secondary/10 blur-[100px] rounded-full pointer-events-none" aria-hidden="true" />
             <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-white/5 blur-[80px] rounded-full pointer-events-none" aria-hidden="true" />
@@ -563,11 +563,11 @@ export default function CollaborationDetailPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
                 <Button 
                   variant="outline" 
                   onClick={openEditDialog}
-                  className="bg-white/10 text-white font-semibold backdrop-blur-md border-white/10 h-12 px-6 rounded-full hover:bg-white/20 hover:text-white hover:-translate-y-0.5 transition-all duration-300"
+                  className="w-full sm:w-auto bg-white/10 text-white font-semibold backdrop-blur-md border-white/10 h-12 px-6 rounded-full hover:bg-white/20 hover:text-white hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <Edit className="h-4 w-4 mr-2" />
                   Edit Details
@@ -575,7 +575,7 @@ export default function CollaborationDetailPage() {
                 <Button 
                   variant="default" 
                   onClick={openStatusDialog}
-                  className="bg-secondary text-primary font-bold h-12 px-6 rounded-full shadow-[0_8px_16px_-6px_rgba(167,243,208,0.4)] hover:bg-[#8EF1C3] hover:-translate-y-0.5 transition-all duration-300"
+                  className="w-full sm:w-auto bg-secondary text-primary font-bold h-12 px-6 rounded-full shadow-[0_8px_16px_-6px_rgba(167,243,208,0.4)] hover:bg-[#8EF1C3] hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Change Status
