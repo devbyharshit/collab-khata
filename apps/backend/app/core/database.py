@@ -21,6 +21,10 @@ async_engine = create_async_engine(
     async_url,
     echo=settings.debug,
     poolclass=pool.NullPool,
+    connect_args={
+        "prepared_statement_cache_size": 0,
+        "statement_cache_size": 0,
+    }
 )
 
 # Session makers
