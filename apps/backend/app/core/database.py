@@ -12,14 +12,24 @@ sync_engine = create_engine(
 
 # Async engine for FastAPI operations
 async_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
+
+# Determine connect args based on whether we're connecting to Supabase (which requires special pooler settings)
+# or a local/standard PostgreSQL instance
+is_supabase = "supabase.co" in async_url or "supabase.com" in async_url
+
+connect_args = {
+    "prepared_statement_cache_size": 0,
+    "statement_cache_size": 0,
+}
+
+if is_supabase:
+    connect_args["server_settings"] = {"prepare_threshold": "0"}
+
 async_engine = create_async_engine(
     async_url,
     echo=settings.debug,
     poolclass=pool.NullPool,
-    connect_args={
-        "statement_cache_size": 0,
-        "server_settings": {"prepare_threshold": "0"}
-    }
+    connect_args=connect_args
 )
 
 # Session makers
