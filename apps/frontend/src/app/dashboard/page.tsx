@@ -98,22 +98,21 @@ export default function DashboardPage() {
 
           {/* Error State */}
           {error && (
-            <Card className="border-red-200 bg-red-50 mb-6">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-2 text-red-800">
+                        <div className="bg-red-50/50 border border-red-100 rounded-[2rem] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-3 text-red-800">
+                <div className="bg-red-100 p-2 rounded-full">
                   <AlertCircle className="h-5 w-5" />
-                  <p className="font-medium">{error}</p>
                 </div>
-                <Button 
-                  onClick={fetchDashboardData} 
-                  variant="outline" 
-                  className="mt-4"
-                  size="sm"
-                >
-                  Retry
-                </Button>
-              </CardContent>
-            </Card>
+                <p className="font-semibold">{error}</p>
+              </div>
+              <Button 
+                onClick={fetchDashboardData} 
+                variant="outline" 
+                className="bg-white border-red-200 text-red-700 hover:bg-red-50 rounded-2xl shadow-sm w-full sm:w-auto"
+              >
+                Retry Request
+              </Button>
+            </div>
           )}
 
           {/* Dashboard Content */}

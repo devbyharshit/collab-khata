@@ -77,13 +77,13 @@ export default function RegisterPage() {
 
   return (
     <AuthGuard requireAuth={false}>
-      <div className="flex min-h-screen items-center justify-center p-4 bg-transparent">
+      <div className="flex min-h-screen items-center justify-center p-4 bg-background">
         <div className="w-full max-w-md">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Collab Khata</h1>
+            <h1 className="text-4xl font-extrabold text-primary tracking-tight">Collab Khata</h1>
             <p className="text-gray-500 mt-2">Start managing your brand collaborations</p>
           </div>
-          <Card className="border-0 shadow-2xl glass-panel">
+          <Card className="border-none shadow-soft-lg rounded-[2rem] bg-white">
             <CardHeader className="space-y-1 pb-8">
               <CardTitle className="text-2xl font-bold text-center">
                 Create an account

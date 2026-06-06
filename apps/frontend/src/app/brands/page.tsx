@@ -265,25 +265,25 @@ export default function BrandsPage() {
           {!loading && (
             <>
               {filteredBrands.length === 0 ? (
-                <Card className="flex flex-col items-center justify-center py-16">
-                  <CardContent className="flex flex-col items-center p-0">
-                      <Building2 className="h-16 w-16 text-gray-300 mb-4" />
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {searchQuery ? 'No brands found' : 'No brands yet'}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-6">
-                        {searchQuery
-                          ? 'Try adjusting your search query'
-                          : 'Get started by adding your first brand contact'}
-                      </p>
-                      {!searchQuery && (
-                        <Button onClick={openCreateDialog}>
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Your First Brand
-                        </Button>
-                      )}
-                  </CardContent>
-                </Card>
+                <div className="w-full bg-white border-none rounded-[2.5rem] shadow-soft p-12 md:p-20 flex flex-col items-center justify-center text-center mt-6">
+                  <div className="h-24 w-24 rounded-full bg-secondary/20 text-secondary flex items-center justify-center mb-6">
+                    <Building2 className="h-10 w-10" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    {searchQuery ? 'No brands found' : 'No brands yet'}
+                  </h3>
+                  <p className="text-gray-500 max-w-sm mb-8 text-base">
+                    {searchQuery
+                      ? 'Try adjusting your search query to find what you are looking for.'
+                      : 'Get started by adding your first brand contact. It only takes a minute.'}
+                  </p>
+                  {!searchQuery && (
+                    <Button onClick={openCreateDialog} className="bg-primary hover:bg-primary/90 text-white rounded-full h-14 px-8 text-base shadow-soft-md">
+                      <Plus className="h-5 w-5 mr-2" />
+                      Add Your First Brand
+                    </Button>
+                  )}
+                </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredBrands.map((brand) => (

@@ -312,27 +312,27 @@ export default function CollaborationsPage() {
           {!loading && (
             <>
               {filteredCollaborations.length === 0 ? (
-                <Card className="flex flex-col items-center justify-center py-16">
-                  <CardContent className="flex flex-col items-center p-0">
-                      <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {searchQuery || statusFilter !== 'all'
-                          ? 'No collaborations found'
-                          : 'No collaborations yet'}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-6">
-                        {searchQuery || statusFilter !== 'all'
-                          ? 'Try adjusting your filters'
-                          : 'Get started by creating your first collaboration'}
-                      </p>
-                      {!searchQuery && statusFilter === 'all' && (
-                        <Button onClick={openCreateDialog}>
-                          <Plus className="h-4 w-4 mr-2" />
-                          Create Your First Collaboration
-                        </Button>
-                      )}
-                  </CardContent>
-                </Card>
+                <div className="w-full bg-white border-none rounded-[2.5rem] shadow-soft p-12 md:p-20 flex flex-col items-center justify-center text-center mt-6">
+                  <div className="h-24 w-24 rounded-full bg-secondary/20 text-secondary flex items-center justify-center mb-6">
+                    <Briefcase className="h-10 w-10" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    {searchQuery || statusFilter !== 'all'
+                      ? 'No collaborations found'
+                      : 'No collaborations yet'}
+                  </h3>
+                  <p className="text-gray-500 max-w-sm mb-8 text-base">
+                    {searchQuery || statusFilter !== 'all'
+                      ? 'Try adjusting your filters to find what you are looking for.'
+                      : 'Get started by creating your first collaboration. Manage your pipeline easily.'}
+                  </p>
+                  {!searchQuery && statusFilter === 'all' && (
+                    <Button onClick={openCreateDialog} className="bg-primary hover:bg-primary/90 text-white rounded-full h-14 px-8 text-base shadow-soft-md">
+                      <Plus className="h-5 w-5 mr-2" />
+                      Create First Collaboration
+                    </Button>
+                  )}
+                </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {filteredCollaborations.map((collab) => (
