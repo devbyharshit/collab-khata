@@ -29,7 +29,7 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <AuthProvider>
-            <div className="flex h-screen overflow-hidden">
+            <div className="flex flex-col md:flex-row h-screen overflow-hidden">
               <Navigation />
 
               <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
