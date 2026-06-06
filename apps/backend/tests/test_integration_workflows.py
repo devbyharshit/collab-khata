@@ -9,7 +9,7 @@ Validates Requirements: 9.1, 9.2, 9.5
 
 import pytest
 import pytest_asyncio
-from sqlalchemy import text, select
+from sqlalchemy import text, select, pool
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.config import settings
 from app.core.database import Base
@@ -26,7 +26,16 @@ from datetime import date, timedelta
 async def integration_engine():
     """Create integration test database engine."""
     test_url = settings.test_database_url.replace("postgresql://", "postgresql+asyncpg://")
-    engine = create_async_engine(test_url, echo=False)
+    if "?" in test_url:
+        test_url += "&prepared_statement_cache_size=0"
+    else:
+        test_url += "?prepared_statement_cache_size=0"
+        
+    engine = create_async_engine(
+        test_url,
+        echo=False,
+        poolclass=pool.NullPool,
+    )
     
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

@@ -3,7 +3,7 @@ import pytest_asyncio
 import asyncio
 import os
 from hypothesis import settings as hypothesis_settings, HealthCheck
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, pool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
@@ -23,7 +23,16 @@ async def test_engine():
     """Create test database engine."""
     # Use test database URL
     test_url = settings.test_database_url.replace("postgresql://", "postgresql+asyncpg://")
-    engine = create_async_engine(test_url, echo=False)
+    if "?" in test_url:
+        test_url += "&prepared_statement_cache_size=0"
+    else:
+        test_url += "?prepared_statement_cache_size=0"
+        
+    engine = create_async_engine(
+        test_url,
+        echo=False,
+        poolclass=pool.NullPool,
+    )
     
     # Create all tables
     async with engine.begin() as conn:

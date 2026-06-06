@@ -10,7 +10,7 @@ Validates Requirements: 8.5, 9.1
 import pytest
 import pytest_asyncio
 import time
-from sqlalchemy import text, select, func as sql_func
+from sqlalchemy import text, select, func as sql_func, pool
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.core.config import settings
 from app.core.database import Base
@@ -26,7 +26,16 @@ from datetime import date, timedelta
 async def perf_db_engine():
     """Create performance test database engine."""
     test_url = settings.test_database_url.replace("postgresql://", "postgresql+asyncpg://")
-    engine = create_async_engine(test_url, echo=False, pool_size=20, max_overflow=40)
+    if "?" in test_url:
+        test_url += "&prepared_statement_cache_size=0"
+    else:
+        test_url += "?prepared_statement_cache_size=0"
+        
+    engine = create_async_engine(
+        test_url,
+        echo=False,
+        poolclass=pool.NullPool,
+    )
     
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
