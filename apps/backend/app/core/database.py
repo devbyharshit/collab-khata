@@ -12,18 +12,13 @@ sync_engine = create_engine(
 
 # Async engine for FastAPI operations
 async_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
-if "?" in async_url:
-    async_url += "&prepared_statement_cache_size=0"
-else:
-    async_url += "?prepared_statement_cache_size=0"
-
 async_engine = create_async_engine(
     async_url,
     echo=settings.debug,
     poolclass=pool.NullPool,
     connect_args={
-        "prepared_statement_cache_size": 0,
         "statement_cache_size": 0,
+        "server_settings": {"prepare_threshold": "0"}
     }
 )
 
