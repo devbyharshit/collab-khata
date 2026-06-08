@@ -161,6 +161,7 @@ export default function CollaborationDetailPage() {
       setConversations(Array.isArray(conversationsResponse.data) ? conversationsResponse.data : [])
       setFiles(Array.isArray(filesResponse.data) ? filesResponse.data : [])
     } catch (err: any) {
+      console.error("fetchCollaborationDetails ERROR:", err)
       setError(err?.error?.message || 'Failed to load collaboration details')
     } finally {
       setLoading(false)

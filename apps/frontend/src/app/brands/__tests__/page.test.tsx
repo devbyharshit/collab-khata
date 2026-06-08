@@ -57,6 +57,7 @@ describe('BrandsPage', () => {
       user: { id: 1, email: 'test@example.com', created_at: '2024-01-01' },
       login: jest.fn(),
       register: jest.fn(),
+        registerUser: jest.fn(),
       logout: jest.fn(),
     })
   })
@@ -100,7 +101,7 @@ describe('BrandsPage', () => {
         expect(screen.getByText('No brands yet')).toBeInTheDocument()
       })
 
-      expect(screen.getByText('Get started by adding your first brand contact')).toBeInTheDocument()
+      expect(screen.getByText(/Get started by adding your first brand contact/i)).toBeInTheDocument()
     })
 
     it('should display error message on fetch failure', async () => {
@@ -171,7 +172,7 @@ describe('BrandsPage', () => {
       await user.type(searchInput, 'NonExistent')
 
       expect(screen.getByText('No brands found')).toBeInTheDocument()
-      expect(screen.getByText('Try adjusting your search query')).toBeInTheDocument()
+      expect(screen.getByText(/Try adjusting your search query/i)).toBeInTheDocument()
     })
   })
 
@@ -452,6 +453,142 @@ describe('BrandsPage', () => {
 
       const createButton = screen.getByRole('button', { name: /create brand/i })
       expect(createButton.className).toContain('w-full')
+    })
+  })
+
+  describe('Error Handling and UI edges', () => {
+    it('should show error and clear on dismiss', async () => {
+      mockApiClient.get.mockRejectedValue({ error: { message: 'Fetch error' } })
+      const user = userEvent.setup()
+
+      render(<BrandsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Fetch error')).toBeInTheDocument()
+      })
+
+      const dismissBtn = screen.getByRole('button', { name: /dismiss/i })
+      await user.click(dismissBtn)
+
+      expect(screen.queryByText('Fetch error')).not.toBeInTheDocument()
+    })
+
+    it('should clear field errors on input change', async () => {
+      mockApiClient.get.mockResolvedValue({ data: [] })
+      const user = userEvent.setup()
+
+      render(<BrandsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('No brands yet')).toBeInTheDocument()
+      })
+
+      const addButton = screen.getByRole('button', { name: /add brand/i })
+      await user.click(addButton)
+
+      const createButton = screen.getByRole('button', { name: /create brand/i })
+      await user.click(createButton)
+
+      expect(screen.getByText('Brand name is required')).toBeInTheDocument()
+
+      const nameInput = screen.getByLabelText(/brand name/i)
+      await user.type(nameInput, 'S')
+
+      expect(screen.queryByText('Brand name is required')).not.toBeInTheDocument()
+    })
+
+    it('should close dialogs on cancel', async () => {
+      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      const user = userEvent.setup()
+
+      render(<BrandsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Nike')).toBeInTheDocument()
+      })
+
+      // Create cancel
+      const addButton = screen.getByRole('button', { name: /add brand/i })
+      await user.click(addButton)
+      await user.click(screen.getByRole('button', { name: /cancel/i }))
+      expect(screen.queryByText('Add New Brand')).not.toBeInTheDocument()
+
+      // Edit cancel
+      await user.click(screen.getByTestId('edit-brand-1'))
+      await user.click(screen.getByRole('button', { name: /cancel/i }))
+      expect(screen.queryByText('Edit Brand')).not.toBeInTheDocument()
+
+      // Delete cancel
+      await user.click(screen.getByTestId('delete-brand-1'))
+      await user.click(screen.getByRole('button', { name: /cancel/i }))
+      expect(screen.queryByRole('heading', { name: 'Delete Brand' })).not.toBeInTheDocument()
+    })
+
+    it('should show error when create fails', async () => {
+      mockApiClient.get.mockResolvedValue({ data: [] })
+      mockApiClient.post.mockRejectedValue({ error: { message: 'Create failed' } })
+      const user = userEvent.setup()
+
+      render(<BrandsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('No brands yet')).toBeInTheDocument()
+      })
+
+      await user.click(screen.getByRole('button', { name: /add brand/i }))
+      await user.type(screen.getByLabelText(/brand name/i), 'New Brand')
+      await user.click(screen.getByRole('button', { name: /create brand/i }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Create failed')).toBeInTheDocument()
+      })
+    })
+
+    it('should show error when update fails', async () => {
+      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.put.mockRejectedValue({ error: { message: 'Update failed' } })
+      const user = userEvent.setup()
+
+      render(<BrandsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Nike')).toBeInTheDocument()
+      })
+
+      await user.click(screen.getByTestId('edit-brand-1'))
+      await user.click(screen.getByRole('button', { name: /update brand/i }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Update failed')).toBeInTheDocument()
+      })
+    })
+
+    it('should show error when delete fails', async () => {
+      mockApiClient.get.mockResolvedValue({ data: mockBrands })
+      mockApiClient.delete.mockRejectedValue({ error: { message: 'Delete failed' } })
+      const user = userEvent.setup()
+
+      render(<BrandsPage />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Nike')).toBeInTheDocument()
+      })
+
+      await user.click(screen.getByTestId('delete-brand-1'))
+      await user.click(screen.getByRole('button', { name: /delete brand/i }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Delete failed')).toBeInTheDocument()
+      })
+    })
+    
+    it('should handle non-array brands gracefully', async () => {
+      mockApiClient.get.mockResolvedValue({ data: { someObj: "not an array" } as any })
+      render(<BrandsPage />)
+      
+      await waitFor(() => {
+        expect(screen.getByText('No brands yet')).toBeInTheDocument()
+      })
     })
   })
 })

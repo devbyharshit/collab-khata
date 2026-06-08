@@ -47,21 +47,6 @@ export default function DashboardPage() {
     }).format(amount)
   }
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      Lead: 'bg-gray-100 text-gray-800',
-      Negotiating: 'bg-blue-100 text-blue-800',
-      Confirmed: 'bg-green-100 text-green-800',
-      InProduction: 'bg-yellow-100 text-yellow-800',
-      Posted: 'bg-purple-100 text-purple-800',
-      PaymentPending: 'bg-orange-100 text-orange-800',
-      Overdue: 'bg-red-100 text-red-800',
-      Paid: 'bg-emerald-100 text-emerald-800',
-      Closed: 'bg-slate-100 text-slate-800',
-    }
-    return colors[status] || 'bg-gray-100 text-gray-800'
-  }
-
   const getStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
       Lead: 'Lead',
@@ -82,7 +67,7 @@ export default function DashboardPage() {
       <div className="w-full space-y-6">
         {/* Header */}
         <PageHeader 
-          title="Dashboard" 
+          title={`Welcome back, ${user?.email || 'User'}`} 
           description="Plan, prioritize, and accomplish your tasks with ease." 
         />
 
@@ -118,7 +103,21 @@ export default function DashboardPage() {
           {/* Dashboard Content */}
           {!loading && !error && dashboardData && (
             <>
-              
+              {dashboardData.financial_summary.overdue_count > 0 && (
+                <div className="bg-red-50/50 border border-red-100 rounded-[2rem] p-6 shadow-sm flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-red-100 p-2 rounded-full">
+                      <AlertCircle className="h-5 w-5 text-red-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-red-800 font-semibold">Overdue Payments Alert</h3>
+                      <p className="text-sm text-red-600">
+                        You have {dashboardData.financial_summary.overdue_count} payment{dashboardData.financial_summary.overdue_count === 1 ? '' : 's'} past {dashboardData.financial_summary.overdue_count === 1 ? 'its' : 'their'} promised date.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Financial Summary Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

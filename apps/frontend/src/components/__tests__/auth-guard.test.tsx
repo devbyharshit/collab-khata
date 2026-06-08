@@ -33,6 +33,7 @@ describe('AuthGuard', () => {
         user: null,
         login: jest.fn(),
         register: jest.fn(),
+        registerUser: jest.fn(),
         logout: jest.fn(),
       })
 
@@ -53,6 +54,7 @@ describe('AuthGuard', () => {
         user: null,
         login: jest.fn(),
         register: jest.fn(),
+        registerUser: jest.fn(),
         logout: jest.fn(),
       })
 
@@ -75,6 +77,7 @@ describe('AuthGuard', () => {
         user: null,
         login: jest.fn(),
         register: jest.fn(),
+        registerUser: jest.fn(),
         logout: jest.fn(),
       })
 
@@ -96,6 +99,7 @@ describe('AuthGuard', () => {
         user: { id: 1, email: 'test@example.com', created_at: '2024-01-01' },
         login: jest.fn(),
         register: jest.fn(),
+        registerUser: jest.fn(),
         logout: jest.fn(),
       })
 
@@ -118,6 +122,7 @@ describe('AuthGuard', () => {
         user: { id: 1, email: 'test@example.com', created_at: '2024-01-01' },
         login: jest.fn(),
         register: jest.fn(),
+        registerUser: jest.fn(),
         logout: jest.fn(),
       })
 
@@ -140,6 +145,7 @@ describe('AuthGuard', () => {
         user: null,
         login: jest.fn(),
         register: jest.fn(),
+        registerUser: jest.fn(),
         logout: jest.fn(),
       })
 

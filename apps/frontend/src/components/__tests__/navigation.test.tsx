@@ -17,7 +17,7 @@ const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>
 
 describe('Navigation - Responsive Design Tests', () => {
   const mockLogout = jest.fn()
-  const mockUser = { id: 1, email: 'test@example.com' }
+  const mockUser = { id: 1, email: 'test@example.com', created_at: '2024-01-01' }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -204,9 +204,11 @@ describe('Navigation - Responsive Design Tests', () => {
     it('should not render navigation when not authenticated', () => {
       mockUseAuth.mockReturnValue({
         isAuthenticated: false,
-        user: null,
-        login: jest.fn(),
-        logout: jest.fn(),
+      user: null,
+      login: jest.fn(),
+      register: jest.fn(),
+      registerUser: jest.fn(),
+      logout: jest.fn(),
         loading: false,
       })
       

@@ -67,6 +67,7 @@ describe('DashboardPage', () => {
       user: mockUser,
       login: jest.fn(),
       register: jest.fn(),
+        registerUser: jest.fn(),
       logout: mockLogout,
     })
   })
@@ -261,9 +262,9 @@ describe('DashboardPage', () => {
         expect(screen.getByText('Posted')).toBeInTheDocument()
       })
 
-      expect(screen.getByText('3')).toBeInTheDocument()
-      expect(screen.getByText('2')).toBeInTheDocument()
-      expect(screen.getByText('1')).toBeInTheDocument()
+      expect(screen.getByText('3 Collabs')).toBeInTheDocument()
+      expect(screen.getByText('2 Collabs')).toBeInTheDocument()
+      expect(screen.getByText('1 Collab')).toBeInTheDocument()
     })
 
     it('should display proper labels for status names', async () => {
@@ -280,7 +281,7 @@ describe('DashboardPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('In Production')).toBeInTheDocument()
-        expect(screen.getByText('Payment Pending')).toBeInTheDocument()
+        expect(screen.getByText('Pay Pending')).toBeInTheDocument()
       })
     })
 
@@ -288,9 +289,7 @@ describe('DashboardPage', () => {
       render(<DashboardPage />)
 
       await waitFor(() => {
-        const singleCollabText = screen.getByText('1')
-        const parent = singleCollabText.closest('div')
-        expect(parent).toHaveTextContent('1collaboration')
+        expect(screen.getByText('1 Collab')).toBeInTheDocument()
       })
     })
 
@@ -298,9 +297,7 @@ describe('DashboardPage', () => {
       render(<DashboardPage />)
 
       await waitFor(() => {
-        const multipleCollabText = screen.getByText('3')
-        const parent = multipleCollabText.closest('div')
-        expect(parent).toHaveTextContent('3collaborations')
+        expect(screen.getByText('3 Collabs')).toBeInTheDocument()
       })
     })
 
@@ -315,9 +312,8 @@ describe('DashboardPage', () => {
       render(<DashboardPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/No collaborations yet. Start by creating your first collaboration!/)
-        ).toBeInTheDocument()
+        expect(screen.getByText(/No collaborations yet/i)).toBeInTheDocument()
+        expect(screen.getByText(/Start by creating your first collaboration!/i)).toBeInTheDocument()
       })
     })
   })
@@ -345,12 +341,12 @@ describe('DashboardPage', () => {
       render(<DashboardPage />)
 
       await waitFor(() => {
-        expect(screen.getByText('Dashboard')).toBeInTheDocument()
+        expect(screen.getByText(`Welcome back, ${mockUser.email}`)).toBeInTheDocument()
       })
 
-      const heading = screen.getByText('Dashboard')
-      expect(heading.className).toContain('text-2xl')
-      expect(heading.className).toContain('md:text-3xl')
+      const heading = screen.getByText(`Welcome back, ${mockUser.email}`)
+      expect(heading.className).toContain('text-3xl')
+      expect(heading.className).toContain('md:text-4xl')
     })
 
     it('should render financial cards in responsive grid', async () => {

@@ -89,12 +89,6 @@ export default function CollaborationsPage() {
 
   useEffect(() => {
     // Filter collaborations based on search query and status
-    // Ensure collaborations is always an array
-    if (!Array.isArray(collaborations)) {
-      setFilteredCollaborations([])
-      return
-    }
-    
     let filtered = collaborations
 
     // Apply status filter
@@ -413,6 +407,7 @@ export default function CollaborationsPage() {
                 Brand <span className="text-red-500">*</span>
               </Label>
               <BrandAutocomplete
+                id="create-brand"
                 brands={brands}
                 value={formData.brand_id}
                 onChange={(value) => handleInputChange('brand_id', value)}

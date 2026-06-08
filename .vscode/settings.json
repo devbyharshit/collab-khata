@@ -1,4 +1,6 @@
 {
     "kiroAgent.configureMCP": "Enabled",
-    "Slingshot.readFileLineLimit": 3000
+    "Slingshot.readFileLineLimit": 3000,
+    "jest.rootPath": "apps/frontend",
+    "jest.jestCommandLine": "npm test --"
 }

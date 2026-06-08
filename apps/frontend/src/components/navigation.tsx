@@ -114,6 +114,22 @@ export function Navigation() {
               </button>
             </div>
           </div>
+          
+          {user?.email && (
+            <div className="mt-auto pb-4 border-t border-gray-100 pt-4">
+              <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-gray-50">
+                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                  {user.email.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-sm font-semibold text-gray-900 truncate">
+                    {user.email}
+                  </span>
+                  <span className="text-xs text-gray-500">Creator</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -129,6 +145,7 @@ export function Navigation() {
             </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

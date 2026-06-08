@@ -23,6 +23,7 @@ import apiClient from "@/lib/api-client"
 import { toast } from "sonner"
 
 interface BrandAutocompleteProps {
+  id?: string
   brands: Brand[]
   value: number | undefined
   onChange: (value: number) => void
@@ -36,7 +37,7 @@ interface BrandfetchResult {
   icon: string
 }
 
-export function BrandAutocomplete({ brands, value, onChange, onBrandCreated }: BrandAutocompleteProps) {
+export function BrandAutocomplete({ id, brands, value, onChange, onBrandCreated }: BrandAutocompleteProps) {
   const [open, setOpen] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState("")
   const [externalBrands, setExternalBrands] = React.useState<BrandfetchResult[]>([])
@@ -95,6 +96,7 @@ export function BrandAutocomplete({ brands, value, onChange, onBrandCreated }: B
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          id={id}
           variant="outline"
           role="combobox"
           aria-expanded={open}

@@ -36,6 +36,7 @@ describe('LoginPage', () => {
       user: null,
       login: mockLogin,
       register: jest.fn(),
+        registerUser: jest.fn(),
       logout: jest.fn(),
     })
   })
