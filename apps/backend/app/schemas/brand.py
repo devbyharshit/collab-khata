@@ -18,9 +18,12 @@ class BrandCreate(BaseModel):
     @classmethod
     def strip_whitespace(cls, data):
         if isinstance(data, dict):
-            for field in ['name', 'contact_name', 'contact_channel', 'notes']:
+            for field in ['name', 'contact_name', 'contact_email', 'contact_channel', 'notes']:
                 if field in data and isinstance(data[field], str):
                     data[field] = data[field].strip()
+            for field in ['contact_name', 'contact_email', 'contact_channel', 'notes']:
+                if field in data and data[field] == "":
+                    data[field] = None
         return data
 
 
@@ -36,9 +39,12 @@ class BrandUpdate(BaseModel):
     @classmethod
     def strip_whitespace(cls, data):
         if isinstance(data, dict):
-            for field in ['name', 'contact_name', 'contact_channel', 'notes']:
+            for field in ['name', 'contact_name', 'contact_email', 'contact_channel', 'notes']:
                 if field in data and isinstance(data[field], str):
                     data[field] = data[field].strip()
+            for field in ['contact_name', 'contact_email', 'contact_channel', 'notes']:
+                if field in data and data[field] == "":
+                    data[field] = None
         return data
 
 

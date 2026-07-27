@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown, Loader2, Plus, Search } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { Check, ChevronsUpDown, Loader2, Plus, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,86 +11,96 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Brand } from "@/types"
-import { useDebounce } from "@/hooks/use-debounce"
-import apiClient from "@/lib/api-client"
-import { toast } from "sonner"
+} from "@/components/ui/popover";
+import { Brand } from "@/types";
+import { useDebounce } from "@/hooks/use-debounce";
+import apiClient from "@/lib/api-client";
+import { toast } from "sonner";
 
 interface BrandAutocompleteProps {
-  id?: string
-  brands: Brand[]
-  value: number | undefined
-  onChange: (value: number) => void
-  onBrandCreated: (brand: Brand) => void
+  id?: string;
+  brands: Brand[];
+  value: number | undefined;
+  onChange: (value: number) => void;
+  onBrandCreated: (brand: Brand) => void;
 }
 
 interface BrandfetchResult {
-  brandId: string
-  name: string
-  domain: string
-  icon: string
+  brandId: string;
+  name: string;
+  domain: string;
+  icon: string;
 }
 
-export function BrandAutocomplete({ id, brands, value, onChange, onBrandCreated }: BrandAutocompleteProps) {
-  const [open, setOpen] = React.useState(false)
-  const [searchQuery, setSearchQuery] = React.useState("")
-  const [externalBrands, setExternalBrands] = React.useState<BrandfetchResult[]>([])
-  const [isLoadingExternal, setIsLoadingExternal] = React.useState(false)
-  const [isCreating, setIsCreating] = React.useState(false)
-  
-  const debouncedSearch = useDebounce(searchQuery, 300)
+export function BrandAutocomplete({
+  id,
+  brands,
+  value,
+  onChange,
+  onBrandCreated,
+}: BrandAutocompleteProps) {
+  const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [externalBrands, setExternalBrands] = React.useState<
+    BrandfetchResult[]
+  >([]);
+  const [isLoadingExternal, setIsLoadingExternal] = React.useState(false);
+  const [isCreating, setIsCreating] = React.useState(false);
+
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   React.useEffect(() => {
     async function searchExternalBrands() {
       if (!debouncedSearch || debouncedSearch.length < 2) {
-        setExternalBrands([])
-        return
+        setExternalBrands([]);
+        return;
       }
 
-      setIsLoadingExternal(true)
+      setIsLoadingExternal(true);
       try {
-        const res = await fetch(`https://api.brandfetch.io/v2/search/${encodeURIComponent(debouncedSearch)}`)
+        const res = await fetch(
+          `https://api.brandfetch.io/v2/search/${encodeURIComponent(debouncedSearch)}`
+        );
         if (res.ok) {
-          const data = await res.json()
-          setExternalBrands(data)
+          const data = await res.json();
+          setExternalBrands(data);
         }
       } catch (error) {
-        console.error("Failed to fetch external brands", error)
+        console.error("Failed to fetch external brands", error);
       } finally {
-        setIsLoadingExternal(false)
+        setIsLoadingExternal(false);
       }
     }
 
-    searchExternalBrands()
-  }, [debouncedSearch])
+    searchExternalBrands();
+  }, [debouncedSearch]);
 
-  const selectedBrand = brands.find((brand) => brand.id === value)
+  const selectedBrand = brands.find((brand) => brand.id === value);
 
   const handleCreateBrand = async (name: string) => {
     try {
-      setIsCreating(true)
-      const response = await apiClient.post<Brand>('/api/brands/', { name })
-      onBrandCreated(response.data)
-      onChange(response.data.id)
-      setOpen(false)
-      toast.success('Brand created successfully')
+      setIsCreating(true);
+      const response = await apiClient.post<Brand>("/api/brands/", { name });
+      onBrandCreated(response.data);
+      onChange(response.data.id);
+      setOpen(false);
+      toast.success("Brand created successfully");
     } catch (error: any) {
-      toast.error(error?.error?.message || 'Failed to create brand')
+      toast.error(error?.error?.message || "Failed to create brand");
     } finally {
-      setIsCreating(false)
+      setIsCreating(false);
     }
-  }
+  };
 
   // Filter local brands
-  const filteredLocalBrands = brands.filter((brand) => 
+  const filteredLocalBrands = brands.filter((brand) =>
     brand.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -106,14 +116,21 @@ export function BrandAutocomplete({ id, brands, value, onChange, onBrandCreated 
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 sm:w-[400px]" align="start">
-        <Command shouldFilter={false} className="max-h-[300px]">
-          <CommandInput 
-            placeholder="Search brands..." 
+      <PopoverContent
+        className="w-full p-0 sm:w-[400px] max-h-[300px] flex flex-col overflow-hidden"
+        align="start"
+        portal={false}
+      >
+        <Command
+          shouldFilter={false}
+          className="w-full h-full flex flex-col overflow-hidden"
+        >
+          <CommandInput
+            placeholder="Search brands..."
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
-          <CommandList>
+          <CommandList className="flex-1 max-h-full overflow-y-auto">
             <CommandEmpty className="py-6 text-center text-sm">
               {isLoadingExternal ? (
                 <div className="flex items-center justify-center text-muted-foreground">
@@ -124,20 +141,24 @@ export function BrandAutocomplete({ id, brands, value, onChange, onBrandCreated 
                 <div className="flex flex-col items-center gap-2">
                   <p>No brands found.</p>
                   {searchQuery && (
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => handleCreateBrand(searchQuery)}
                       disabled={isCreating}
                     >
-                      {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                      {isCreating ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Plus className="mr-2 h-4 w-4" />
+                      )}
                       Create &quot;{searchQuery}&quot;
                     </Button>
                   )}
                 </div>
               )}
             </CommandEmpty>
-            
+
             {filteredLocalBrands.length > 0 && (
               <CommandGroup heading="Your Brands">
                 {filteredLocalBrands.map((brand) => (
@@ -145,8 +166,8 @@ export function BrandAutocomplete({ id, brands, value, onChange, onBrandCreated 
                     key={`local-${brand.id}`}
                     value={`local-${brand.id}`}
                     onSelect={() => {
-                      onChange(brand.id)
-                      setOpen(false)
+                      onChange(brand.id);
+                      setOpen(false);
                     }}
                   >
                     <Check
@@ -172,30 +193,42 @@ export function BrandAutocomplete({ id, brands, value, onChange, onBrandCreated 
                   >
                     <Plus className="mr-2 h-4 w-4 text-muted-foreground" />
                     {brand.icon ? (
-                      <img src={brand.icon} alt={brand.name} className="w-6 h-6 rounded-md object-contain bg-white" />
+                      <img
+                        src={brand.icon}
+                        alt={brand.name}
+                        className="w-6 h-6 rounded-md object-contain bg-white"
+                      />
                     ) : (
                       <div className="w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center">
                         <Search className="h-3 w-3 text-gray-400" />
                       </div>
                     )}
                     <span>{brand.name}</span>
-                    <span className="text-xs text-muted-foreground ml-auto">{brand.domain}</span>
+                    <span className="text-xs text-muted-foreground ml-auto">
+                      {brand.domain}
+                    </span>
                   </CommandItem>
                 ))}
               </CommandGroup>
             )}
-            
-            {searchQuery && !filteredLocalBrands.some(b => b.name.toLowerCase() === searchQuery.toLowerCase()) && (
-              <CommandGroup heading="Create">
-                <CommandItem value={`create-${searchQuery}`} onSelect={() => handleCreateBrand(searchQuery)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create custom brand &quot;{searchQuery}&quot;
-                </CommandItem>
-              </CommandGroup>
-            )}
+
+            {searchQuery &&
+              !filteredLocalBrands.some(
+                (b) => b.name.toLowerCase() === searchQuery.toLowerCase()
+              ) && (
+                <CommandGroup heading="Create">
+                  <CommandItem
+                    value={`create-${searchQuery}`}
+                    onSelect={() => handleCreateBrand(searchQuery)}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create custom brand &quot;{searchQuery}&quot;
+                  </CommandItem>
+                </CommandGroup>
+              )}
           </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

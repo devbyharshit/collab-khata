@@ -34,7 +34,11 @@ apiClient.interceptors.response.use(
       if (error.response.status === 401) {
         clearToken()
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login'
+          const pathname = window.location.pathname
+          const isAuthPage = pathname.includes('/auth/login') || pathname.includes('/auth/register')
+          if (!isAuthPage) {
+            window.location.href = '/auth/login'
+          }
         }
       }
 

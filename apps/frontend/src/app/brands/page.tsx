@@ -114,7 +114,10 @@ export default function BrandsPage() {
     
     try {
       setSubmitting(true)
-      await apiClient.post('/api/brands', formData)
+      const cleanedData = Object.fromEntries(
+        Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value])
+      )
+      await apiClient.post('/api/brands', cleanedData)
       setIsCreateDialogOpen(false)
       resetForm()
       fetchBrands()
@@ -130,7 +133,10 @@ export default function BrandsPage() {
     
     try {
       setSubmitting(true)
-      await apiClient.put(`/api/brands/${selectedBrand.id}`, formData)
+      const cleanedData = Object.fromEntries(
+        Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value])
+      )
+      await apiClient.put(`/api/brands/${selectedBrand.id}`, cleanedData)
       setIsEditDialogOpen(false)
       resetForm()
       setSelectedBrand(null)
